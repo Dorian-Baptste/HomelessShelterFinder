@@ -1,18 +1,42 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-  <title>Homeless Shelter Finder</title>
-  <link href="https://api.mapbox.com/mapbox-gl-js/v3.9.4/mapbox-gl.css" rel="stylesheet">
-  <script src="https://api.mapbox.com/mapbox-gl-js/v3.9.4/mapbox-gl.js"></script>
-  <link href="style.css" rel="stylesheet" type="text/css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homeless Shelter Finder</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    
-    <script src="script.js"></script>
-</body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="search.html">SEARCH</a></li>
+                <li><a href="shelters.html">ADD A SHELTER</a></li>
+            </ul>
+        </nav>
+    </header>
 
+    <div class="search-container">
+        <button class="menu-button">&#9776;</button>
+        <input type="text" placeholder="SEARCH FOR A HOMELESS SHELTER NEAR YOU!">
+        <button class="search-button">&#128269;</button>
+    </div>
+
+    <div class="map-container">
+        <div class="map">
+            THE MAP (THIS MAP SHOULD STAY STILL SO WHEN SCROLLING ONLY THE ABOUT US WOULD SCROLL - fixed position ~)
+        </div>
+        <div class="expand-button">&#10526;</div>
+    </div>
+
+    <div class="about-us">
+        <h2>ABOUT US</h2>
+        <p>something about what we do why we do this and more about the purpose of the website and what you can do using the website</p>
+    </div>
+
+    <footer>
+        FOOTER
+    </footer>
+</body>
 </html>

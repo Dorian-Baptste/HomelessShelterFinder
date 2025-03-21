@@ -1,18 +1,56 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-  <title>Search shelters</title>
-  <link href="https://api.mapbox.com/mapbox-gl-js/v3.9.4/mapbox-gl.css" rel="stylesheet">
-  <script src="https://api.mapbox.com/mapbox-gl-js/v3.9.4/mapbox-gl.js"></script>
-  <link href="style.css" rel="stylesheet" type="text/css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="search.css">
 </head>
-
 <body>
-    
-    <script src="script.js"></script>
-</body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="search.html">SEARCH</a></li>
+                <li><a href="shelters.html">ADD A SHELTER</a></li>
+            </ul>
+        </nav>
+    </header>
 
+    <div class="search-bar">
+        <input type="text" placeholder="Search..." class="search-input">
+        <button class="search-button">Search</button>
+    </div>
+
+    <div class="results">
+        <div class="result-item">
+            <a href="https://www.example.com/page1" class="result-title">Example Page 1</a>
+            <p class="result-url">www.example.com/page1</p>
+            <p class="result-description">This is a short description of Example Page 1. It provides useful information on a specific topic.</p>
+        </div>
+
+        <div class="result-item">
+            <a href="https://www.example.com/page2" class="result-title">Another Example Page</a>
+            <p class="result-url">www.example.com/page2</p>
+            <p class="result-description">A different page with content related to the search query. Explore this page for more details.</p>
+        </div>
+
+        <div class="result-item">
+            <a href="https://www.example.com/page3" class="result-title">Yet Another Example</a>
+            <p class="result-url">www.example.com/page3</p>
+            <p class="result-description">This page focuses on a particular aspect of the subject. It's a great resource for in-depth information.</p>
+        </div>
+    </div>
+
+    <div class="pagination">
+        <a href="#" class="page-number">1</a>
+        <a href="#" class="page-number">2</a>
+        <a href="#" class="page-number">3</a>
+        <a href="#" class="page-number">Next</a>
+    </div>
+
+    <footer>
+        FOOTER
+    </footer>
+</body>
 </html>
