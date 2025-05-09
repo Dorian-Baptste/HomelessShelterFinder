@@ -1,3 +1,4 @@
+/* Content from your original style.css */
 body {
     font-family: sans-serif;
     margin: 0;
@@ -92,6 +93,8 @@ nav a:hover {
     background-color: #80cbc4; /* Teal */
     padding: 20px;
     color: white;
+    margin-top: 400px; /* Ensure this is enough to clear the fixed map. Adjust if map height changes. */
+                       /* This assumes the map container itself doesn't take up flow space due to the fixed map inside.*/
 }
 
 footer {

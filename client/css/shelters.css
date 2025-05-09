@@ -1,0 +1,174 @@
+/* Content from your original shelters.css */
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f9f9f9; /* Light background for the page */
+}
+
+header {
+    background-color: #e0f2f7; /* Light blue */
+    padding: 10px;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav li {
+    margin: 0 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #333;
+    padding: 8px 15px; /* Slightly more padding */
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+nav a:hover, nav a.active { /* Added active class styling */
+    background-color: #b3e5fc; /* Slightly darker blue on hover */
+    color: #005f73; /* Darker text color on hover */
+}
+
+.form-container {
+    background-color: #fff; /* White background for form */
+    padding: 30px; /* More padding */
+    width: 80%;
+    max-width: 600px; /* Max width for better readability */
+    margin: 30px auto;
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* More pronounced shadow */
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #333;
+    font-size: 1.8em; /* Larger heading */
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px; /* More space below label */
+    font-weight: 600; /* Bolder labels */
+    color: #555;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"], /* Added for potential email field */
+.form-group input[type="tel"],   /* Added for potential phone field */
+.form-group textarea {           /* Added for larger text inputs like notes */
+    width: calc(100% - 22px); /* Original calculation, ensure it works with padding */
+    padding: 12px; /* More padding */
+    border: 1px solid #ccc; /* Slightly darker border */
+    border-radius: 5px;
+    outline: none;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="tel"]:focus,
+.form-group textarea:focus {
+    border-color: #007bff; /* Highlight on focus */
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25); /* Bootstrap-like focus shadow */
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Spacing between tags */
+    margin-top: 5px;
+}
+
+.tag {
+    background-color: #e9ecef; /* Lighter, neutral background for unselected tags */
+    color: #495057; /* Darker text for unselected tags */
+    padding: 8px 15px; /* More padding */
+    border: 1px solid #ced4da; /* Border for unselected tags */
+    border-radius: 20px; /* Pill-shaped tags */
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.tag:hover {
+    background-color: #d1d9e0;
+    border-color: #b8c2cc;
+}
+
+.tag.selected { /* Style for selected tags */
+    background-color: #a5d6a7; /* Darker green for selected */
+    color: white;
+    border-color: #81c784; /* Matching border for selected */
+}
+
+
+.submit-button {
+    background-color: #28a745; /* Bootstrap success green */
+    color: white;
+    padding: 12px 25px; /* More padding */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    width: 100%; /* Full width button */
+    max-width: 250px; /* Max width for the button itself */
+    margin: 30px auto 0; /* Centered with more top margin */
+    font-size: 1.1em; /* Larger font */
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+#formMessage { /* Styling for feedback messages */
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+}
+
+#formMessage.success {
+    background-color: #d4edda; /* Light green for success */
+    color: #155724; /* Dark green text */
+    border: 1px solid #c3e6cb;
+}
+
+#formMessage.error {
+    background-color: #f8d7da; /* Light red for error */
+    color: #721c24; /* Dark red text */
+    border: 1px solid #f5c6cb;
+}
+
+
+footer {
+    background-color: #a5d6a7; /* Darker green */
+    color: white;
+    text-align: center;
+    padding: 15px; /* More padding */
+    width: 100%;
+    margin-top: auto; /* Push footer to bottom */
+    box-shadow: 0 -2px 4px rgba(0,0,0,0.1); /* Subtle top shadow */
+}

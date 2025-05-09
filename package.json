@@ -1,0 +1,28 @@
+{
+  "name": "homeless-shelter-finder",
+  "version": "1.0.0",
+  "description": "Application to find and list homeless shelters.",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "nodemon server/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "homeless",
+    "shelter",
+    "api",
+    "map"
+  ],
+  "author": "Your Name",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.8",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

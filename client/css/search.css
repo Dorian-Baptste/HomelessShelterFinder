@@ -1,0 +1,163 @@
+/* Content from your original search.css */
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f9f9f9; /* Light background for the page */
+}
+
+header {
+    background-color: #e0f2f7; /* Light blue */
+    padding: 10px;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav li {
+    margin: 0 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #333;
+    padding: 8px 15px; /* Slightly more padding */
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+nav a:hover, nav a.active { /* Added active class styling */
+    background-color: #b3e5fc; /* Slightly darker blue on hover */
+    color: #005f73; /* Darker text color on hover */
+}
+
+.search-bar {
+    background-color: #fff; /* White background for search bar */
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    width: 80%; /* Adjusted width */
+    max-width: 700px; /* Max width for larger screens */
+    margin: 30px auto; /* Centered with margin */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow */
+}
+
+.search-input {
+    width: 80%;
+    padding: 12px 15px; /* More padding */
+    border: 1px solid #ddd; /* Softer border */
+    border-radius: 5px 0 0 5px;
+    outline: none;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: #007bff; /* Highlight on focus */
+}
+
+.search-button {
+    background-color: #a5d6a7; /* Darker green */
+    color: white;
+    padding: 12px 20px; /* More padding */
+    border: none;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+    background-color: #81c784; /* Lighter green on hover */
+}
+
+.results {
+    width: 80%; /* Adjusted width */
+    max-width: 700px; /* Max width for larger screens */
+    margin: 20px auto; /* Centered with margin */
+}
+
+.result-item {
+    background-color: #fff; /* White background for items */
+    margin-bottom: 20px;
+    padding: 15px; /* More padding */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08); /* Subtle shadow */
+    transition: box-shadow 0.3s ease;
+}
+
+.result-item:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* More pronounced shadow on hover */
+}
+
+.result-title {
+    font-size: 1.3em; /* Larger title */
+    color: #1a0dab;
+    text-decoration: none;
+    font-weight: 600; /* Bolder */
+}
+
+.result-title:hover {
+    text-decoration: underline;
+}
+
+.result-url {
+    font-size: 0.9em;
+    color: #006621;
+    margin-top: 5px; /* Spacing */
+    display: block; /* Ensure it takes its own line if needed */
+}
+
+.result-description {
+    font-size: 1em; /* Slightly larger description */
+    color: #545454;
+    line-height: 1.6; /* Improved readability */
+    margin-top: 8px; /* Spacing */
+}
+
+.pagination {
+    margin-top: 30px;
+    text-align: center;
+    width: 80%; /* Adjusted width */
+    max-width: 700px; /* Max width */
+    margin: 30px auto 40px auto; /* Centered with margin, more bottom margin */
+}
+
+.page-number {
+    padding: 10px 15px; /* More padding */
+    border: 1px solid #ddd;
+    margin: 0 5px;
+    text-decoration: none;
+    color: #333;
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.page-number:hover, .page-number.active {
+    background-color: #a5d6a7; /* Green background for active/hover */
+    color: white;
+    border-color: #a5d6a7;
+}
+
+footer {
+    background-color: #a5d6a7; /* Darker green */
+    color: white;
+    text-align: center;
+    padding: 15px; /* More padding */
+    width: 100%;
+    margin-top: auto; /* Push footer to bottom */
+    box-shadow: 0 -2px 4px rgba(0,0,0,0.1); /* Subtle top shadow */
+}
