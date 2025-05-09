@@ -14,17 +14,15 @@ const ShelterSchema = new mongoose.Schema({
     required: [true, "Address is required."],
     trim: true,
   },
-  // GeoJSON Point for geospatial queries
   location: {
+    // For geospatial queries
     type: {
       type: String,
       enum: ["Point"], // 'location.type' must be 'Point'
-      // required: true // Make it optional initially if geocoding is separate
     },
     coordinates: {
       type: [Number], // Array of numbers for [longitude, latitude]
-      // required: true,
-      index: "2dsphere", // Create a geospatial index for location queries
+      index: "2dsphere", // Create a geospatial index
     },
     formattedAddress: String, // Store the address returned by geocoder
   },
@@ -37,8 +35,6 @@ const ShelterSchema = new mongoose.Schema({
       type: String,
       trim: true,
       lowercase: true,
-      // Basic email validation
-      // match: [/.+\@.+\..+/, 'Please fill a valid email address']
     },
     website: {
       type: String,
@@ -58,7 +54,6 @@ const ShelterSchema = new mongoose.Schema({
     trim: true,
   },
   eligibility: {
-    // e.g., "Men only", "Women and children", "All welcome"
     type: String,
     trim: true,
   },
@@ -74,19 +69,16 @@ const ShelterSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  // (Optional) If you implement user accounts for who added/manages the shelter
-  // addedBy: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: 'User' // Reference to a User model
-  // }
 });
 
-// Middleware to update `lastUpdated` field before saving
+// Middleware to update `lastUpdated` field before saving or updating
 ShelterSchema.pre("save", function (next) {
-  if (this.isModified()) {
-    // only update if something has changed
-    this.lastUpdated = Date.now();
-  }
+  this.lastUpdated = Date.now();
+  next();
+});
+
+ShelterSchema.pre("findOneAndUpdate", function (next) {
+  this.set({ lastUpdated: Date.now() });
   next();
 });
 

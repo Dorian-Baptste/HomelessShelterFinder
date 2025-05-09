@@ -10,7 +10,7 @@
     <header>
         <nav>
             <ul>
-                <li><a href="/index.html">HOME</a></li>
+                <li><a href="/index.html" class="active">HOME</a></li>
                 <li><a href="/search.html">SEARCH</a></li>
                 <li><a href="/shelters.html">ADD A SHELTER</a></li>
             </ul>
@@ -18,30 +18,32 @@
     </header>
 
     <div class="search-container">
-        <button class="menu-button">&#9776;</button>
-        <input type="text" placeholder="SEARCH FOR A HOMELESS SHELTER NEAR YOU!">
-        <button class="search-button">&#128269;</button>
+        <button class="menu-button" aria-label="Open menu">&#9776;</button>
+        <input type="text" id="mainSearchInput" placeholder="SEARCH FOR A HOMELESS SHELTER NEAR YOU!">
+        <button class="search-button" id="mainSearchButton" aria-label="Search">&#128269;</button>
     </div>
 
     <div class="map-container">
-        <div class="map">
-            THE MAP (THIS MAP SHOULD STAY STILL SO WHEN SCROLLING ONLY THE ABOUT US WOULD SCROLL - fixed position ~)
+        <div id="map" class="map">
+            Loading map...
         </div>
-        <div class="expand-button">&#10526;</div>
     </div>
 
     <div class="about-us">
         <h2>ABOUT US</h2>
-        <p>something about what we do why we do this and more about the purpose of the website and what you can do using the website</p>
+        <p>Welcome to the Homeless Shelter Finder. Our mission is to provide an easy-to-use platform to locate shelters and essential resources for those in need in New York City. We believe everyone deserves a safe place, and this tool is designed to connect individuals with the support available in their community. You can use this website to search for shelters based on location or services, view them on an interactive map, and get detailed information. We are continuously working to update our listings and improve accessibility.</p>
+        <p>If you operate a shelter or know of one not listed, please visit the "ADD A SHELTER" page to contribute to our database.</p>
     </div>
 
     <footer>
-        FOOTER
+        <p>&copy; 2025 Homeless Shelter Finder. All rights reserved.</p>
+        <p>Providing resources for NYC.</p>
     </footer>
     
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap">
+    <script async
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-hxI_BTGteX5g2i2Mt_MAdoEVGi5vse0&callback=initMap&libraries=marker&v=beta">
     </script>
+    
     <script src="/js/main.js"></script>
 </body>
 </html>

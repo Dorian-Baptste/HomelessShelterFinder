@@ -5,33 +5,44 @@ let map; // Google Map object
 let infoWindow; // InfoWindow for map markers
 const NYC_COORDS = { lat: 40.7128, lng: -74.006 }; // Default to NYC
 
-// Function to initialize the Google Map
+// Function to initialize the Google Map (called by Google Maps API script callback)
 async function initMap() {
-  const mapElement = document.getElementById("map"); // Get the map div from index.html
+  const mapElement = document.getElementById("map");
   if (!mapElement) {
-    console.error("Map element not found in HTML.");
+    console.error('Map element with id="map" not found in HTML.');
+    // Display error in the map container itself if it exists
+    const mapContainer = document.querySelector(".map-container");
+    if (mapContainer)
+      mapContainer.innerHTML =
+        '<p style="color: red; text-align: center;">Error: Map container not found.</p>';
     return;
   }
+  mapElement.innerHTML = ""; // Clear "Loading map..." text
 
   try {
-    // Dynamically load the Google Maps API if not already loaded
-    // This ensures GOOGLE_MAPS_API_KEY is available from the script tag in index.html
-    // No, this is not how it works. The script tag in HTML loads the API.
-    // This function is the callback specified in that script tag.
+    if (typeof google === "undefined" || typeof google.maps === "undefined") {
+      console.error("Google Maps API not loaded.");
+      mapElement.innerHTML =
+        '<p style="color: red; text-align: center;">Error: Google Maps API failed to load. Check API key and script tag.</p>';
+      return;
+    }
 
     const { Map } = await google.maps.importLibrary("maps");
     const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
     map = new Map(mapElement, {
       center: NYC_COORDS,
-      zoom: 11, // Adjust zoom level as needed
-      mapId: "HOMELESS_SHELTER_MAP", // Optional: for cloud-based map styling
+      zoom: 11,
+      mapId: "HOMELESS_SHELTER_MAP_MAIN", // Optional: for cloud-based map styling
+      gestureHandling: "greedy", // Allows one-finger scroll on mobile
     });
 
-    infoWindow = new google.maps.InfoWindow();
+    infoWindow = new google.maps.InfoWindow({
+      pixelOffset: new google.maps.Size(0, -10),
+    });
 
-    // Fetch all shelters and display them on the map
-    fetchAndDisplayShelters();
+    fetchAndDisplayShelters(); // Fetch shelters and add markers
+    adjustContentMargin(); // Adjust layout after map is potentially sized
 
     // Attempt to get user's current location
     if (navigator.geolocation) {
@@ -42,127 +53,155 @@ async function initMap() {
             lng: position.coords.longitude,
           };
           map.setCenter(userLocation);
-          map.setZoom(13); // Zoom in closer to user's location
-          // Optionally, add a marker for the user's location
+          map.setZoom(13);
+
           new AdvancedMarkerElement({
+            // Add a marker for the user's location
             map: map,
             position: userLocation,
-            title: "Your Location",
-            // Customize user marker if needed
+            title: "Your Current Location",
+            // Consider custom styling for this marker
           });
         },
-        () => {
+        (error) => {
           console.warn(
-            "User denied geolocation or error occurred. Defaulting to NYC."
+            `Geolocation error: ${error.message}. Defaulting to NYC.`
           );
-          // handleLocationError(true, infoWindow, map.getCenter());
         }
       );
     } else {
-      // Browser doesn't support Geolocation
       console.warn("Browser does not support geolocation. Defaulting to NYC.");
-      // handleLocationError(false, infoWindow, map.getCenter());
     }
   } catch (error) {
     console.error("Error initializing Google Map:", error);
-    mapElement.innerHTML =
-      '<p style="color: red; text-align: center;">Could not load the map. Please check your API key and internet connection.</p>';
+    mapElement.innerHTML = `<p style="color: red; text-align: center;">Could not load the map. ${error.message}.</p>`;
   }
 }
 
 // Function to fetch shelters from the backend API
 async function fetchAndDisplayShelters() {
   try {
-    const response = await fetch("/api/shelters"); // Adjust if your API prefix is different
+    const response = await fetch("/api/shelters");
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(
+        `API error! Status: ${response.status} ${response.statusText}`
+      );
     }
     const shelters = await response.json();
     displaySheltersOnMap(shelters);
   } catch (error) {
     console.error("Error fetching shelters:", error);
-    // Optionally display an error message to the user on the page
+    const mapElement = document.getElementById("map");
+    // Display a user-friendly message if the map element is empty (i.e., map hasn't loaded yet)
+    if (mapElement && mapElement.innerHTML.includes("Loading map...")) {
+      mapElement.innerHTML =
+        '<p style="color: orange; text-align: center;">Could not load shelter data at this time.</p>';
+    }
   }
 }
 
 // Function to display shelter markers on the map
 function displaySheltersOnMap(shelters) {
-  if (!map) {
-    console.error("Map object is not initialized.");
+  if (!map || typeof google === "undefined" || !google.maps.marker) {
+    console.error(
+      "Map object or Google Maps marker library is not initialized."
+    );
     return;
   }
+  const { AdvancedMarkerElement } = google.maps.marker;
 
   shelters.forEach((shelter) => {
-    if (shelter.location && shelter.location.coordinates) {
+    if (
+      shelter.location &&
+      shelter.location.coordinates &&
+      shelter.location.coordinates.length === 2
+    ) {
       const [lng, lat] = shelter.location.coordinates;
-      const position = { lat, lng };
 
-      const marker = new google.maps.marker.AdvancedMarkerElement({
+      if (
+        typeof lat !== "number" ||
+        typeof lng !== "number" ||
+        isNaN(lat) ||
+        isNaN(lng)
+      ) {
+        console.warn(
+          `Invalid coordinates for shelter "${
+            shelter.name || "Unknown"
+          }": [${lng}, ${lat}]`
+        );
+        return;
+      }
+
+      const position = { lat, lng };
+      const marker = new AdvancedMarkerElement({
         map: map,
         position: position,
-        title: shelter.name,
-        // You can customize marker icons here
+        title: shelter.name || "Shelter Location",
       });
 
-      // Create content for the InfoWindow
+      const services =
+        shelter.services && shelter.services.length > 0
+          ? shelter.services.join(", ")
+          : "N/A";
+      const phone =
+        shelter.contactInfo && shelter.contactInfo.phone
+          ? shelter.contactInfo.phone
+          : "N/A";
+
       const contentString = `
         <div class="infowindow-content">
-          <h3>${shelter.name}</h3>
-          <p><strong>Address:</strong> ${shelter.address}</p>
-          ${
-            shelter.contactInfo && shelter.contactInfo.phone
-              ? `<p><strong>Phone:</strong> ${shelter.contactInfo.phone}</p>`
-              : ""
-          }
-          ${
-            shelter.services && shelter.services.length > 0
-              ? `<p><strong>Services:</strong> ${shelter.services.join(
-                  ", "
-                )}</p>`
-              : ""
-          }
-          <a href="/search.html?id=${
+          <h3>${shelter.name || "Unnamed Shelter"}</h3>
+          <p><strong>Address:</strong> ${shelter.address || "N/A"}</p>
+          <p><strong>Phone:</strong> ${phone}</p>
+          <p><strong>Services:</strong> ${services}</p>
+          <p><a href="/search.html?id=${
             shelter._id
-          }" target="_blank">More Details</a>
+          }" target="_blank" rel="noopener noreferrer">More Details</a></p>
         </div>
-      `; // Link to a search/detail page
+      `;
 
       marker.addListener("click", () => {
+        infoWindow.close();
         infoWindow.setContent(contentString);
         infoWindow.open(map, marker);
       });
     } else {
       console.warn(
-        `Shelter "${shelter.name}" (ID: ${shelter._id}) is missing location data and cannot be mapped.`
+        `Shelter "${shelter.name || "Unknown"}" (ID: ${
+          shelter._id || "N/A"
+        }) is missing valid location data.`
       );
     }
   });
 }
 
-// Placeholder for handling location errors (optional)
-// function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-//   infoWindow.setPosition(pos);
-//   infoWindow.setContent(
-//     browserHasGeolocation
-//       ? "Error: The Geolocation service failed."
-//       : "Error: Your browser doesn't support geolocation."
-//   );
-//   infoWindow.open(map);
-// }
+// Function to dynamically adjust the margin-top of the .about-us section
+function adjustContentMargin() {
+  const header = document.querySelector("header");
+  const mapContainer = document.querySelector(".map-container");
+  const aboutUs = document.querySelector(".about-us");
 
-// Event listener for the search input on the main page (if you have one)
-const mainSearchInput = document.querySelector(
-  '.search-container input[type="text"]'
-);
-const mainSearchButton = document.querySelector(
-  ".search-container button.search-button"
-);
+  if (header && mapContainer && aboutUs) {
+    const headerHeight = header.offsetHeight;
+    mapContainer.style.top = `${headerHeight}px`; // Position map container below sticky header
+
+    const mapContainerHeight = mapContainer.offsetHeight;
+    aboutUs.style.marginTop = `${headerHeight + mapContainerHeight}px`;
+  }
+}
+
+// Adjust margin on load and on window resize (important for responsive design)
+window.addEventListener("load", adjustContentMargin);
+window.addEventListener("resize", adjustContentMargin);
+
+// Event listener for the search input on the main page
+const mainSearchInput = document.getElementById("mainSearchInput");
+const mainSearchButton = document.getElementById("mainSearchButton");
 
 if (mainSearchInput && mainSearchButton) {
   mainSearchButton.addEventListener("click", () => {
     const searchTerm = mainSearchInput.value.trim();
     if (searchTerm) {
-      // Redirect to search page with the search term
       window.location.href = `/search.html?q=${encodeURIComponent(searchTerm)}`;
     }
   });
@@ -173,14 +212,3 @@ if (mainSearchInput && mainSearchButton) {
     }
   });
 }
-
-// Expose initMap to the global scope if it's called by Google Maps API callback
-// This is typically done by adding `&callback=initMap` to the Google Maps script URL in index.html
-// window.initMap = initMap; // This is not needed if script tag has callback=initMap
-// and initMap is a global function.
-// If using modules, you might need to explicitly attach.
-// For simplicity, assuming initMap is global due to script tag.
-
-// Note: The Google Maps script in index.html should look like:
-// <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap&libraries=marker"></script>
-// The `&libraries=marker` is important for `AdvancedMarkerElement`.

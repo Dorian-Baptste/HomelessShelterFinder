@@ -7,8 +7,14 @@ const axios = require("axios"); // For making HTTP requests to Geocoding API
 // Helper function for Geocoding (example using Google Geocoding API)
 async function geocodeAddress(address) {
   const apiKey = process.env.GOOGLE_MAPS_API_KEY;
-  if (!apiKey) {
-    console.warn("Google Maps API Key not found. Geocoding will be skipped.");
+  if (
+    !apiKey ||
+    apiKey === "AIzaSyD-hxI_BTGteX5g2i2Mt_MAdoEVGi5vse0" ||
+    apiKey === "TEMP_KEY_FOR_TESTING"
+  ) {
+    console.warn(
+      "Google Maps API Key is missing, not configured, or is a placeholder. Geocoding will be skipped."
+    );
     return null;
   }
   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
@@ -35,22 +41,17 @@ async function geocodeAddress(address) {
       return null;
     }
   } catch (error) {
-    console.error("Error during geocoding:", error.message);
+    console.error("Error during geocoding request:", error.message);
     return null;
   }
 }
 
-// Controller methods
-
 // Get all shelters
-// GET /api/shelters
 exports.getAllShelters = async (req, res) => {
   try {
-    // Basic query object
     let query = {};
-    const { search, services, near } = req.query;
+    const { search, services, near, radius } = req.query;
 
-    // Text search (simple case-insensitive search on name and address)
     if (search) {
       query.$or = [
         { name: { $regex: search, $options: "i" } },
@@ -59,34 +60,35 @@ exports.getAllShelters = async (req, res) => {
       ];
     }
 
-    // Filter by services (if services is a comma-separated string)
     if (services) {
-      const servicesArray = services.split(",").map((s) => s.trim());
+      const servicesArray = services
+        .split(",")
+        .map((s) => s.trim())
+        .filter((s) => s);
       if (servicesArray.length > 0) {
-        query.services = { $all: servicesArray }; // Must have all specified services
+        query.services = { $all: servicesArray };
       }
     }
 
-    // Geospatial query: find shelters near a point
-    // ?near=longitude,latitude&radius=5000 (radius in meters)
     if (near) {
-      const [lng, lat] = near.split(",").map(parseFloat);
-      const radius = parseInt(req.query.radius, 10) || 10000; // Default 10km
+      const [lngStr, latStr] = near.split(",").map((s) => s.trim());
+      const lng = parseFloat(lngStr);
+      const lat = parseFloat(latStr);
+      const maxDistance = parseInt(radius, 10) || 10000; // Default 10km in meters
 
       if (!isNaN(lng) && !isNaN(lat)) {
         query.location = {
           $nearSphere: {
-            $geometry: {
-              type: "Point",
-              coordinates: [lng, lat],
-            },
-            $maxDistance: radius, // in meters
+            $geometry: { type: "Point", coordinates: [lng, lat] },
+            $maxDistance: maxDistance,
           },
         };
+      } else {
+        console.warn("Invalid coordinates for 'near' query:", near);
       }
     }
 
-    const shelters = await Shelter.find(query).sort({ dateAdded: -1 }); // Sort by newest first
+    const shelters = await Shelter.find(query).sort({ name: 1 }); // Sort by name
     res.json(shelters);
   } catch (err) {
     console.error("Error fetching shelters:", err.message);
@@ -97,7 +99,6 @@ exports.getAllShelters = async (req, res) => {
 };
 
 // Create a new shelter
-// POST /api/shelters
 exports.createShelter = async (req, res) => {
   const {
     name,
@@ -109,9 +110,7 @@ exports.createShelter = async (req, res) => {
     eligibility,
     notes,
   } = req.body;
-
   try {
-    // Basic validation
     if (!name || !address) {
       return res
         .status(400)
@@ -126,7 +125,7 @@ exports.createShelter = async (req, res) => {
     const newShelter = new Shelter({
       name,
       address,
-      location: locationData, // This will be null if geocoding fails or address is not provided
+      location: locationData,
       contactInfo,
       services: services || [],
       capacity,
@@ -151,7 +150,6 @@ exports.createShelter = async (req, res) => {
 };
 
 // Get a single shelter by ID
-// GET /api/shelters/:id
 exports.getShelterById = async (req, res) => {
   try {
     const shelter = await Shelter.findById(req.params.id);
@@ -171,7 +169,6 @@ exports.getShelterById = async (req, res) => {
 };
 
 // Update an existing shelter
-// PUT /api/shelters/:id
 exports.updateShelter = async (req, res) => {
   const {
     name,
@@ -183,43 +180,27 @@ exports.updateShelter = async (req, res) => {
     eligibility,
     notes,
   } = req.body;
-
   try {
     let shelter = await Shelter.findById(req.params.id);
     if (!shelter) {
       return res.status(404).json({ message: "Shelter not found." });
     }
 
-    // Prepare update data
-    const updateData = {
-      name: name || shelter.name,
-      address: address || shelter.address,
-      contactInfo: contactInfo || shelter.contactInfo,
-      services: services || shelter.services,
-      capacity: capacity !== undefined ? capacity : shelter.capacity,
-      operatingHours: operatingHours || shelter.operatingHours,
-      eligibility: eligibility || shelter.eligibility,
-      notes: notes || shelter.notes,
-      lastUpdated: Date.now(), // Explicitly set lastUpdated
-    };
+    const updateData = { ...req.body }; // Start with all fields from body
 
     // If address is being updated, re-geocode
     if (address && address !== shelter.address) {
       const newLocationData = await geocodeAddress(address);
-      if (newLocationData) {
-        updateData.location = newLocationData;
-      } else {
-        // Handle case where new address can't be geocoded - maybe keep old location or nullify
-        console.warn(
-          `Could not geocode new address "${address}" for shelter ID ${shelter._id}. Location not updated.`
-        );
-      }
+      updateData.location = newLocationData; // Will be null if geocoding fails
+    } else if (address === shelter.address) {
+      // If address is the same, don't nullify existing location if new geocoding is skipped
+      updateData.location = shelter.location;
     }
 
     const updatedShelter = await Shelter.findByIdAndUpdate(
       req.params.id,
       { $set: updateData },
-      { new: true, runValidators: true } // Return the modified document and run schema validators
+      { new: true, runValidators: true }
     );
 
     res.json(updatedShelter);
@@ -242,23 +223,19 @@ exports.updateShelter = async (req, res) => {
 };
 
 // Delete a shelter
-// DELETE /api/shelters/:id
 exports.deleteShelter = async (req, res) => {
   try {
-    const shelter = await Shelter.findById(req.params.id);
+    const shelter = await Shelter.findByIdAndDelete(req.params.id); // Use findByIdAndDelete
     if (!shelter) {
+      // findByIdAndDelete returns the doc if found, or null
       return res.status(404).json({ message: "Shelter not found." });
     }
-
-    await Shelter.findByIdAndDelete(req.params.id); // Use findByIdAndDelete
-
     res.json({ message: "Shelter removed successfully." });
   } catch (err) {
     console.error("Error deleting shelter:", err.message);
     if (err.kind === "ObjectId") {
-      return res
-        .status(404)
-        .json({ message: "Shelter not found (invalid ID format)." });
+      // Check if error is due to invalid ID format
+      return res.status(400).json({ message: "Invalid shelter ID format." });
     }
     res
       .status(500)

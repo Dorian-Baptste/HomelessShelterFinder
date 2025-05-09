@@ -3,9 +3,8 @@
 
 const express = require("express");
 const router = express.Router();
+// Import controller functions
 const shelterController = require("../../controllers/shelterController");
-
-// --- Shelter API Routes ---
 
 // @route   GET /api/shelters
 // @desc    Get all shelters (can include query params for filtering/searching)
