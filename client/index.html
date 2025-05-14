@@ -3,36 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homeless Shelter Finder</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
+    <title>Homeless Shelter Finder - Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css"> </head>
 <body>
     <header>
         <nav>
             <ul>
                 <li><a href="/index.html" class="active">HOME</a></li>
-                <li><a href="/search.html">SEARCH</a></li>
                 <li><a href="/shelters.html">ADD A SHELTER</a></li>
             </ul>
         </nav>
     </header>
 
-    <div class="search-container">
+    <div class="search-bar-container"> 
         <button class="menu-button" aria-label="Open menu">&#9776;</button>
-        <input type="text" id="mainSearchInput" placeholder="SEARCH FOR A HOMELESS SHELTER NEAR YOU!">
-        <button class="search-button" id="mainSearchButton" aria-label="Search">&#128269;</button>
+        <input type="text" id="mainSearchInput" placeholder="SEARCH ON MAP (filters map below)">
+        <button class="search-button" id="mainSearchButton" aria-label="Search Map">&#128269;</button>
     </div>
 
-    <div class="map-container">
-        <div id="map" class="map">
-            Loading map...
-        </div>
-    </div>
+    <div class="dashboard-content-wrapper">
+        
+        <aside class="left-panel-map-about">
+            <div class="map-container">
+                <div id="map" class="map">
+                    Loading map...
+                </div>
+            </div>
+            <div class="about-us">
+                <h2>ABOUT US</h2>
+                <p>Welcome to the Homeless Shelter Finder. Our mission is to provide an easy-to-use platform to locate shelters and essential resources for those in need in New York City. We believe everyone deserves a safe place, and this tool is designed to connect individuals with the support available in their community.</p>
+                <p>You can use this website to search for shelters based on location or services, view them on an interactive map, and get detailed information. We are continuously working to update our listings and improve accessibility.</p>
+            </div>
+        </aside>
 
-    <div class="about-us">
-        <h2>ABOUT US</h2>
-        <p>Welcome to the Homeless Shelter Finder. Our mission is to provide an easy-to-use platform to locate shelters and essential resources for those in need in New York City. We believe everyone deserves a safe place, and this tool is designed to connect individuals with the support available in their community. You can use this website to search for shelters based on location or services, view them on an interactive map, and get detailed information. We are continuously working to update our listings and improve accessibility.</p>
-        <p>If you operate a shelter or know of one not listed, please visit the "ADD A SHELTER" page to contribute to our database.</p>
+        <main class="right-panel-iframe">
+            <iframe src="/search.html" title="Shelter Search Results">Your browser does not support iframes. Please <a href="/search.html">visit the search page directly</a>.</iframe>
+        </main>
     </div>
 
     <footer>
@@ -40,8 +46,8 @@
         <p>Providing resources for NYC.</p>
     </footer>
     
-    <script async 
-        src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap">
+    <script async
+            src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap&libraries=marker&v=beta">
     </script>
     
     <script src="/js/main.js"></script>

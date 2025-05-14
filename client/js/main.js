@@ -10,7 +10,6 @@ async function initMap() {
   const mapElement = document.getElementById("map");
   if (!mapElement) {
     console.error('Map element with id="map" not found in HTML.');
-    // Display error in the map container itself if it exists
     const mapContainer = document.querySelector(".map-container");
     if (mapContainer)
       mapContainer.innerHTML =
@@ -33,8 +32,8 @@ async function initMap() {
     map = new Map(mapElement, {
       center: NYC_COORDS,
       zoom: 11,
-      mapId: "HOMELESS_SHELTER_MAP_MAIN", // Optional: for cloud-based map styling
-      gestureHandling: "greedy", // Allows one-finger scroll on mobile
+      mapId: "HOMELESS_SHELTER_MAP_DASHBOARD", // Unique Map ID
+      gestureHandling: "greedy",
     });
 
     infoWindow = new google.maps.InfoWindow({
@@ -42,7 +41,7 @@ async function initMap() {
     });
 
     fetchAndDisplayShelters(); // Fetch shelters and add markers
-    adjustContentMargin(); // Adjust layout after map is potentially sized
+    // adjustContentMargin(); // <<<< THIS FUNCTION AND ITS CALLS SHOULD BE REMOVED
 
     // Attempt to get user's current location
     if (navigator.geolocation) {
@@ -56,11 +55,9 @@ async function initMap() {
           map.setZoom(13);
 
           new AdvancedMarkerElement({
-            // Add a marker for the user's location
             map: map,
             position: userLocation,
             title: "Your Current Location",
-            // Consider custom styling for this marker
           });
         },
         (error) => {
@@ -92,8 +89,8 @@ async function fetchAndDisplayShelters() {
   } catch (error) {
     console.error("Error fetching shelters:", error);
     const mapElement = document.getElementById("map");
-    // Display a user-friendly message if the map element is empty (i.e., map hasn't loaded yet)
-    if (mapElement && mapElement.innerHTML.includes("Loading map...")) {
+    if (mapElement && mapElement.innerHTML === "") {
+      // Check if map is empty (cleared "Loading map...")
       mapElement.innerHTML =
         '<p style="color: orange; text-align: center;">Could not load shelter data at this time.</p>';
     }
@@ -175,7 +172,8 @@ function displaySheltersOnMap(shelters) {
   });
 }
 
-// Function to dynamically adjust the margin-top of the .about-us section
+/*
+// REMOVE OR COMMENT OUT THE adjustContentMargin FUNCTION AND ITS LISTENERS
 function adjustContentMargin() {
   const header = document.querySelector("header");
   const mapContainer = document.querySelector(".map-container");
@@ -183,16 +181,16 @@ function adjustContentMargin() {
 
   if (header && mapContainer && aboutUs) {
     const headerHeight = header.offsetHeight;
-    mapContainer.style.top = `${headerHeight}px`; // Position map container below sticky header
+    mapContainer.style.top = `${headerHeight}px`; 
 
     const mapContainerHeight = mapContainer.offsetHeight;
     aboutUs.style.marginTop = `${headerHeight + mapContainerHeight}px`;
   }
 }
 
-// Adjust margin on load and on window resize (important for responsive design)
 window.addEventListener("load", adjustContentMargin);
 window.addEventListener("resize", adjustContentMargin);
+*/
 
 // Event listener for the search input on the main page
 const mainSearchInput = document.getElementById("mainSearchInput");
@@ -202,7 +200,12 @@ if (mainSearchInput && mainSearchButton) {
   mainSearchButton.addEventListener("click", () => {
     const searchTerm = mainSearchInput.value.trim();
     if (searchTerm) {
-      window.location.href = `/search.html?q=${encodeURIComponent(searchTerm)}`;
+      // This search bar now primarily filters the map on the current page.
+      // If you want it to also interact with the iframe, that's more complex.
+      // For now, let's assume it's for map filtering (which needs to be implemented)
+      console.log("Map search term:", searchTerm);
+      // Example: You might refetch shelters with this search term as a query parameter
+      // fetchAndDisplayShelters(searchTerm); // You'd need to modify fetchAndDisplayShelters
     }
   });
 
