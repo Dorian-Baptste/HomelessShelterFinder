@@ -9,7 +9,7 @@ async function geocodeAddress(address) {
   const apiKey = process.env.GOOGLE_MAPS_API_KEY;
   if (
     !apiKey ||
-    apiKey === "YOUR_GOOGLE_MAPS_API_KEY" ||
+    apiKey === "AIzaSyBqi8Rxz0so1b2KhNDgj_R9keu_v2TgEuw" ||
     apiKey === "TEMP_KEY_FOR_TESTING"
   ) {
     console.warn(

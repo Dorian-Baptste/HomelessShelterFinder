@@ -1,24 +1,30 @@
 /* client/css/style.css */
+html {
+    height: 100%;
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
 body {
     font-family: sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f8f9fa;
+    background-color: #f8f9fa; /* Light neutral background */
     color: #333;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-height: 100vh; /* Full viewport height */
 }
 
 header {
     background-color: #e0f2f7; /* Light blue */
-    padding: 10px 20px;
+    padding: 10px 25px;
     width: 100%;
-    box-sizing: border-box;
-    position: sticky; /* Makes header stick to top on scroll */
-    top: 0;
-    z-index: 1000; /* Ensures header is above other content */
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    flex-shrink: 0; /* Prevent header from shrinking */
+    /* position: sticky; top: 0; z-index: 1000; /* Optional: if you want a sticky header */
 }
 
 nav ul {
@@ -31,51 +37,51 @@ nav ul {
 }
 
 nav li {
-    margin: 0 20px;
+    margin: 0 15px;
 }
 
 nav a {
     text-decoration: none;
     color: #333;
-    padding: 8px 15px; /* Slightly more padding */
+    padding: 8px 12px;
     border-radius: 5px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
+    font-weight: 500; /* Adjusted from bold for a cleaner look */
+    transition: background-color 0.2s ease-in-out;
 }
 
-nav a:hover, nav a.active { /* Added active class styling */
-    background-color: #b3e5fc; /* Slightly darker blue on hover */
-    color: #005f73; /* Darker text color on hover */
+nav a:hover,
+nav a.active {
+    background-color: #b3e5fc; /* Consistent hover */
+    color: #005f73; /* Consistent hover text color */
 }
 
-.search-container {
+.search-bar-container { /* Renamed for clarity */
     background-color: #c8e6c9; /* Light green */
-    padding: 15px 20px;
+    padding: 12px 25px; /* Slightly reduced padding */
     display: flex;
-    justify-content: center;
     align-items: center;
     gap: 10px;
     border-bottom: 1px solid #b2d8b5;
-    box-sizing: border-box;
     width: 100%;
+    flex-shrink: 0; /* Prevent search bar from shrinking */
 }
 
-.search-container input[type="text"] {
+.search-bar-container input[type="text"] {
     padding: 10px 15px;
     border: 1px solid #adb5bd;
     border-radius: 5px;
     flex-grow: 1;
-    max-width: 500px;
+    max-width: 550px; /* Adjusted max-width */
     font-size: 0.95rem;
 }
 
-.search-container input[type="text"]:focus {
+.search-bar-container input[type="text"]:focus {
     border-color: #a5d6a7;
     box-shadow: 0 0 0 0.2rem rgba(165, 214, 167, 0.25);
     outline: none;
 }
 
-.search-container button {
+.search-bar-container button {
     background-color: #a5d6a7; /* Darker green */
     color: white;
     border: none;
@@ -85,128 +91,158 @@ nav a:hover, nav a.active { /* Added active class styling */
     font-size: 0.95rem;
     transition: background-color 0.2s ease-in-out;
 }
-
-.search-container button:hover {
-    background-color: #81c784; /* Lighter green on hover */
+.search-bar-container button:hover {
+    background-color: #81c784;
 }
-
-.search-container button.menu-button {
+.search-bar-container button.menu-button {
     background-color: transparent;
     color: #333;
     font-size: 1.5rem;
     padding: 8px 10px;
+    margin-right: 5px;
 }
-.search-container button.menu-button:hover {
+.search-bar-container button.menu-button:hover {
     background-color: rgba(0,0,0,0.05);
 }
 
-/* Map Styling */
-.map-container {
+/* Wrapper for the two-column layout */
+.dashboard-content-wrapper {
+    display: flex;
+    flex-grow: 1; /* Allows this wrapper to fill available vertical space */
+    padding: 20px;
+    gap: 20px; /* Space between left and right panels */
     width: 100%;
-    height: 45vh; /* Adjust as needed */
-    position: fixed; /* Map stays fixed */
-    /* top will be set by JS to be below header */
-    left: 0;
-    z-index: 10; /* Below header, above general scrolling content */
+    overflow: hidden; /* Prevent double scrollbars on body if content is too tall */
+}
+
+/* Left Panel: Map and About Us */
+.left-panel-map-about {
+    width: 40%; /* Sidebar takes up 40% of the wrapper width */
+    min-width: 320px; /* Minimum width for the sidebar */
+    max-width: 500px; /* Maximum width for the sidebar */
+    display: flex;
+    flex-direction: column; /* Stack map and about-us vertically */
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); /* Slightly more pronounced shadow */
+    border-radius: 8px;
+    overflow: hidden; /* Important for child scrolling and border-radius */
+}
+
+.map-container {
+    height: 380px; /* Fixed height for the map */
+    width: 100%;
+    background-color: #e9e9e9;
+    border-bottom: 1px solid #e0e0e0; /* Softer border */
+    flex-shrink: 0; /* Prevent map container from shrinking */
 }
 
 .map {
     width: 100%;
     height: 100%;
-    background-color: #e9e9e9; /* Placeholder background */
 }
 
-/* About Us Section - This will scroll */
 .about-us {
-    background-color: #ffffff;
-    padding: 25px;
-    color: #333;
-    line-height: 1.6;
-    /* margin-top will be set by JavaScript (adjustContentMargin) */
-    /* This ensures it's correctly placed below the header and fixed map */
+    flex-grow: 1; /* Takes remaining vertical space in the left-panel */
+    padding: 20px;
+    overflow-y: auto; /* Allows "About Us" content to scroll if it's too long */
+    background-color: #fdfdfd; /* Slightly off-white */
 }
 
 .about-us h2 {
     color: #333;
     margin-top: 0;
-    border-bottom: 2px solid #e0f2f7; /* Light blue accent */
+    border-bottom: 2px solid #e0f2f7; /* Matches header */
     padding-bottom: 10px;
-    margin-bottom: 20px;
-    font-size: 1.8em;
+    margin-bottom: 15px;
+    font-size: 1.4em; /* Adjusted size */
+}
+
+.about-us p {
+    line-height: 1.65; /* Slightly more spacing */
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+}
+
+/* Right Panel: Iframe for search.html */
+.right-panel-iframe {
+    flex-grow: 1; /* Takes up the remaining width */
+    background-color: #ffffff; /* Background for the iframe container */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    border-radius: 8px;
+    overflow: hidden; /* To ensure iframe border-radius is respected */
+}
+
+.right-panel-iframe iframe {
+    width: 100%;
+    height: 100%; /* Iframe will fill the .right-panel-iframe container */
+    border: none; /* Remove default iframe border */
 }
 
 footer {
     background-color: #a5d6a7; /* Darker green */
     color: white;
     text-align: center;
-    padding: 15px 20px;
-    margin-top: auto; /* Pushes footer to the bottom */
+    padding: 15px 25px;
     font-size: 0.9rem;
     width: 100%;
-    box-sizing: border-box;
+    flex-shrink: 0; /* Prevent footer from shrinking */
+    /* margin-top: auto; /* This is handled by flex-grow on dashboard-content-wrapper */
 }
-
 footer p {
     margin: 5px 0;
 }
 
-/* InfoWindow styling */
-.infowindow-content {
-    padding: 5px;
-    max-width: 250px; /* Prevent info window from becoming too wide */
-}
-.infowindow-content h3 {
-    margin: 0 0 5px 0;
-    font-size: 1.1em;
-    color: #333;
-}
-.infowindow-content p {
-    margin: 3px 0;
-    font-size: 0.9em;
-}
-.infowindow-content a {
-    color: #007bff;
-    text-decoration: none;
-}
-.infowindow-content a:hover {
-    text-decoration: underline;
-}
+/* InfoWindow styling (retained from previous) */
+.infowindow-content { padding: 5px; max-width: 250px; }
+.infowindow-content h3 { margin: 0 0 5px 0; font-size: 1.1em; color: #333; }
+.infowindow-content p { margin: 3px 0; font-size: 0.9em; }
+.infowindow-content a { color: #007bff; text-decoration: none; }
+.infowindow-content a:hover { text-decoration: underline; }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
-    header {
-        padding: 10px 15px;
+@media (max-width: 992px) { /* Tablet and smaller */
+    .dashboard-content-wrapper {
+        flex-direction: column; /* Stack left and right panels */
+        overflow: auto; /* Allow wrapper to scroll if content overflows vertically */
+    }
+    .left-panel-map-about, .right-panel-iframe {
+        width: 100%; /* Both panels take full width when stacked */
+        max-width: none; /* Remove max-width constraint for stacked layout */
+    }
+    .right-panel-iframe {
+        min-height: 600px; /* Give iframe a decent height when stacked */
+        /* Or consider aspect-ratio if you want it to be responsive */
+    }
+    .map-container {
+        height: 300px; /* Adjust map height for stacked view */
+    }
+    .about-us {
+        max-height: 250px; /* Limit about-us height and make it scroll */
+    }
+}
+
+@media (max-width: 768px) { /* Mobile */
+    header, .search-bar-container {
+        padding-left: 15px;
+        padding-right: 15px;
     }
     nav ul {
-        flex-wrap: wrap; /* Allow nav items to wrap */
-        justify-content: space-around; /* Better spacing on wrap */
+        flex-wrap: wrap;
+        justify-content: space-around;
     }
     nav li {
         margin: 5px 10px;
     }
-    .search-container {
-        padding: 10px 15px;
-        flex-direction: column; /* Stack search items */
+    .search-bar-container {
+        flex-direction: column;
         gap: 10px;
     }
-    .search-container input[type="text"] {
-        width: 100%;
-        max-width: none;
-        box-sizing: border-box;
-    }
-    .search-container button {
+    .search-bar-container input[type="text"],
+    .search-bar-container button {
          width: 100%;
-         box-sizing: border-box;
     }
-     .search-container button.menu-button {
+     .search-bar-container button.menu-button {
         align-self: flex-start;
-        width: auto; /* Menu button doesn't need to be full width */
-    }
-
-    .map-container {
-        height: 40vh; /* Adjust map height on mobile */
-    }
-    .about-us h2 {
-        font-size: 1.5em;
+        width: auto;
     }
 }
