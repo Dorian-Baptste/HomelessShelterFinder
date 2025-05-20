@@ -10,7 +10,7 @@ async function geocodeAddress(address) {
   if (
     !apiKey ||
     apiKey === "" ||
-    apiKey === "TEMP_KEY_FOR_TESTING"
+    apiKey === ""
   ) {
     console.warn(
       "Google Maps API Key is missing, not configured, or is a placeholder. Geocoding will be skipped."
