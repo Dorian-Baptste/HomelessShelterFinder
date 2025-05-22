@@ -124,6 +124,28 @@ PORT=5000 # Or any port you prefer for the backend server
 GOOGLE_MAPS_API_KEY=your_google_maps_javascript_api_key_here
 # JWT_SECRET=a_strong_secret_for_jwt (if implementing user authentication)
 Replace placeholder values with your actual credentials.
+
+# test data for DB:
+db.shelters.insertOne({
+  name: "Test Shelter NYC",
+  address: "123 Main St, New York, NY 10001", // Use a real address for geocoding to work later
+  location: { // You might need to get these coords manually or let your app's geocoder fill them
+    type: "Point",
+    coordinates: [-73.985130, 40.748817] // Example: Near Empire State Building [lng, lat]
+  },
+  contactInfo: {
+    phone: "212-555-1234",
+    email: "info@testshelter.org",
+    website: "http://testshelter.org"
+  },
+  services: ["Beds", "Meals", "Family Services", "Emergency Shelter"],
+  capacity: 50,
+  operatingHours: "24/7",
+  eligibility: "All welcome",
+  notes: "This is a test shelter entry."
+});
+
+
 Start the backend server:
 Bash
 
