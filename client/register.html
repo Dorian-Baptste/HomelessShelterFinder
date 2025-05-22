@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Homeless Shelter Finder</title>
+    <link rel="stylesheet" href="/css/auth-style.css"> </head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/index.html">HOME</a></li>
+                <li><a href="/shelters.html">ADD A SHELTER</a></li>
+                <li><a href="/login.html">LOGIN</a></li>
+                <!-- Register is the current page, so no active link to itself here,
+                     or you could style it as active if preferred. -->
+            </ul>
+        </nav>
+    </header>
+
+    <div class="auth-container">
+        <h2>Create Account</h2>
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password (min. 6 characters):</label>
+                <input type="password" id="password" name="password" required minlength="6">
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required minlength="6">
+            </div>
+            <button type="submit" class="auth-button">Register</button>
+        </form>
+        <div id="authMessage"></div> <p class="form-link">Already have an account? <a href="/login.html">Login here</a></p>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Homeless Shelter Finder. All rights reserved.</p>
+        </footer>
+
+    <script src="/js/authUtils.js"></script>
+    <script src="/js/register.js"></script>
+</body>
+</html>

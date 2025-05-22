@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Homeless Shelter Finder</title>
+    <link rel="stylesheet" href="/css/auth-style.css"> </head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/index.html">HOME</a></li>
+                <li><a href="/shelters.html">ADD A SHELTER</a></li>
+                <li><a href="/register.html">REGISTER</a></li> 
+            </ul>
+        </nav>
+    </header>
+
+    <div class="auth-container">
+        <h2>User Login</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="auth-button">Login</button>
+        </form>
+        <div id="authMessage"></div> <p class="form-link">Don't have an account? <a href="/register.html">Register here</a></p>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Homeless Shelter Finder. All rights reserved.</p>
+    </footer>
+
+    <script src="/js/authUtils.js"></script> <script src="/js/login.js"></script>   </body>
+</html>

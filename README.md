@@ -192,3 +192,5 @@ Capstone Project Requirements Checklist
 [ ] GitHub Repository with Commit History
 [ ] Site Hosting (Link Provided)
 (This README will be updated as the project progresses.)
+
+ npm install bcryptjs jsonwebtoken
