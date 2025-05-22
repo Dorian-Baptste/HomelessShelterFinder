@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const searchInput = document.getElementById("searchInput");
   const performSearchButton = document.getElementById("performSearchButton");
   const resultsContainer = document.getElementById("resultsContainer");
-  const paginationContainer = document.getElementById("paginationContainer"); // Assuming you'll add pagination
+  const paginationContainer = document.getElementById("paginationContainer"); 
 
   // Function to fetch and display search results
   async function performSearch(query = "") {

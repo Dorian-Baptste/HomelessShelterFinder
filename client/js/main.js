@@ -4,7 +4,7 @@
 let map; // Google Map object
 let infoWindow; // InfoWindow for map markers
 const NYC_COORDS = { lat: 40.7128, lng: -74.0060 }; // Default to NYC
-let allSheltersData = []; // To store initially fetched shelter data
+let homelessShelterFinder = []; // To store initially fetched shelter data
 let currentMarkers = []; // To keep track of markers on the map
 
 // Function to initialize the Google Map (called by Google Maps API script callback)
@@ -95,19 +95,19 @@ async function fetchAndStoreInitialShelters() {
     console.log("Fetched shelters data:", shelters); // <<< IMPORTANT LOG
 
     if (shelters && Array.isArray(shelters)) {
-        allSheltersData = shelters;
-        console.log(`Stored ${allSheltersData.length} shelters in allSheltersData.`);
-        displaySheltersOnMap(allSheltersData);
+        homelessShelterFinder = shelters;
+        console.log(`Stored ${homelessShelterFinder.length} shelters in homelessShelterFinder.`);
+        displaySheltersOnMap(homelessShelterFinder);
     } else {
         console.error("Fetched data is not a valid array:", shelters);
-        allSheltersData = []; // Ensure it's an array even if fetch failed
-        displaySheltersOnMap(allSheltersData); // Display empty (will show "no shelters")
+        homelessShelterFinder = []; // Ensure it's an array even if fetch failed
+        displaySheltersOnMap(homelessShelterFinder); // Display empty (will show "no shelters")
     }
 
   } catch (error) {
     console.error("Error in fetchAndStoreInitialShelters:", error);
-    allSheltersData = []; // Ensure it's an array on error
-    displaySheltersOnMap(allSheltersData); // Attempt to display (will show "no shelters")
+    homelessShelterFinder = []; // Ensure it's an array on error
+    displaySheltersOnMap(homelessShelterFinder); // Attempt to display (will show "no shelters")
 
     const mapElement = document.getElementById("map");
     if (mapElement && (mapElement.innerHTML.includes("Loading map...") || mapElement.innerHTML === "")) {
@@ -121,7 +121,7 @@ async function fetchAndStoreInitialShelters() {
 function filterAndDisplayShelters(searchTerm) {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
     console.log(`Filtering with term: "${lowerCaseSearchTerm}"`);
-    const filteredShelters = allSheltersData.filter(shelter => {
+    const filteredShelters = homelessShelterFinder.filter(shelter => {
         return (
             (shelter.name && shelter.name.toLowerCase().includes(lowerCaseSearchTerm)) ||
             (shelter.address && shelter.address.toLowerCase().includes(lowerCaseSearchTerm)) ||
@@ -216,9 +216,7 @@ function displaySheltersOnMap(sheltersToDisplay) {
           <p><strong>Type:</strong> ${shelterTypeInfo}</p>
           <p><strong>Address:</strong> ${shelter.address || "N/A"}</p>
           <p><strong>Phone:</strong> ${phone}</p>
-          <p><a href="/search.html?id=${
-            shelter._id
-          }" target="_blank" rel="noopener noreferrer">More Details</a></p>
+          <p><a href="${shelter.website ||shelter.googleMapsLink}" target="_blank" rel="noopener noreferrer">More Details</a></p>
         </div>
       `;
 
