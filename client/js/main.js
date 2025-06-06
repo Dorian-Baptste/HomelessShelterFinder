@@ -25,6 +25,8 @@ async function initMap() {
   mapElement.innerHTML = ""; // Clear "Loading map..." text
 
   const { Map } = await google.maps.importLibrary("maps");
+  const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+
   map = new Map(mapElement, {
     center: NYC_COORDS,
     zoom: 11,
@@ -49,11 +51,15 @@ async function initMap() {
         };
         map.setCenter(userLocation);
         map.setZoom(13);
-        new google.maps.marker.AdvancedMarkerElement({
+
+        // --- FIX #2 START ---
+        // Pass the 'userLocation' object, not the browser's 'position' object.
+        new AdvancedMarkerElement({
           map,
-          position,
+          position: userLocation,
           title: "Your Location",
         });
+        // --- FIX #2 END ---
       },
       () => console.warn("Geolocation failed. Defaulting to NYC.")
     );
@@ -75,7 +81,7 @@ async function fetchAndDisplayAllShelters() {
     allShelters = shelters; // Store in our global variable
 
     displaySheltersOnMap(allShelters);
-    displaySheltersInList(allShelters); // <-- NEW: Display shelters in the right panel list
+    displaySheltersInList(allShelters);
   } catch (error) {
     console.error("Error fetching shelter data:", error);
     resultsContainer.innerHTML =
@@ -85,7 +91,8 @@ async function fetchAndDisplayAllShelters() {
 
 // Displays a list of shelters in the right-hand panel
 function displaySheltersInList(sheltersToDisplay) {
-  resultsContainer.innerHTML = ""; // Clear previous results
+  // This function is correct and remains unchanged
+  resultsContainer.innerHTML = "";
 
   if (sheltersToDisplay.length === 0) {
     resultsContainer.innerHTML =
@@ -93,7 +100,7 @@ function displaySheltersInList(sheltersToDisplay) {
     return;
   }
 
-  const loggedIn = isLoggedIn(); // Check login status once
+  const loggedIn = isLoggedIn();
 
   sheltersToDisplay.forEach((shelter) => {
     const shelterDiv = document.createElement("div");
@@ -133,9 +140,9 @@ function displaySheltersInList(sheltersToDisplay) {
 }
 
 // Displays shelter markers on the Google Map
-function displaySheltersOnMap(sheltersToDisplay) {
+async function displaySheltersOnMap(sheltersToDisplay) {
   clearMarkers();
-  const { AdvancedMarkerElement } = google.maps.marker;
+  const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
   sheltersToDisplay.forEach((shelter) => {
     if (shelter.location?.coordinates) {
@@ -149,14 +156,35 @@ function displaySheltersOnMap(sheltersToDisplay) {
       });
       currentMarkers.push(marker);
 
+      // --- FIX #1 START ---
+      // Re-added the logic to define variables for the info window content.
+      const phone = shelter.contactInfo?.phone || "N/A";
+      let shelterTypeInfo = "General Services";
+      if (shelter.services && shelter.services.length > 0) {
+        const servicesLower = shelter.services.map((s) => s.toLowerCase());
+        if (servicesLower.some((s) => s.includes("family")))
+          shelterTypeInfo = "Family Resources";
+        else if (servicesLower.some((s) => s.includes("youth")))
+          shelterTypeInfo = "Youth Services";
+        else if (servicesLower.some((s) => s.includes("women")))
+          shelterTypeInfo = "Women's Shelter";
+        else if (servicesLower.some((s) => s.includes("men")))
+          shelterTypeInfo = "Men's Shelter";
+        else shelterTypeInfo = shelter.services.slice(0, 2).join(", ");
+      }
+      // --- FIX #1 END ---
+
       const contentString = `
-                <div class="infowindow-content">
-                  <h3>${shelter.name}</h3>
-                  <p><strong>Address:</strong> ${shelter.address || "N/A"}</p>
-                  <p><strong>Phone:</strong> ${
-                    shelter.contactInfo?.phone || "N/A"
-                  }</p>
-                </div>`;
+        <div class="infowindow-content">
+          <h3>${shelter.name || "Unnamed Shelter"}</h3>
+          <p><strong>Type:</strong> ${shelterTypeInfo}</p>
+          <p><strong>Address:</strong> ${shelter.address || "N/A"}</p>
+          <p><strong>Phone:</strong> ${phone}</p>
+          <p><a href="${
+            shelter.website || shelter.googleMapsLink
+          }" target="_blank" rel="noopener noreferrer">More Details</a></p>
+        </div>
+      `;
 
       marker.addListener("click", () => {
         infoWindow.setContent(contentString);
