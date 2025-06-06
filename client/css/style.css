@@ -19,13 +19,13 @@ body {
 }
 
 header {
-    background-color: #a5d6a7; /* Light blue */
+    background-color: #a5d6a7;
     width: 100%;
     height: 75px;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     flex-shrink: 0;
 }
 
@@ -46,15 +46,15 @@ nav li {
 nav a {
     text-decoration: none;
     color: white;
-    padding: 8px 12px; /* Slightly more padding */
+    padding: 8px 12px;
     border-radius: 5px;
     font-weight: 500;
     transition: background-color 0.2s ease-in-out;
 }
 
-nav a:hover, nav a.active { /* Added active class styling */
-    background-color: #4ea0c6; /* Slightly darker blue on hover */
-    color: white; /* Darker text color on hover */
+nav a:hover, nav a.active {
+    background-color: #81c784; /* This is the correct lighter green */
+    color: white;
 }
 
 /* Wrapper for the two-column layout */
@@ -215,4 +215,68 @@ footer p {
         align-self: flex-start;
         width: auto;
     }
+}
+
+/* --- User Icon Menu Styles --- */
+
+.user-menu-container {
+    position: relative; /* This is crucial for positioning the dropdown */
+    margin-left: 15px;
+}
+
+.user-icon {
+    font-size: 28px; /* Adjust size as needed */
+    color: white;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.user-icon:hover {
+    color: #e0e0e0; /* Slightly lighter on hover */
+}
+
+.user-dropdown {
+    display: none; /* Hidden by default */
+    position: absolute;
+    top: 45px; /* Position below the icon */
+    right: 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    min-width: 180px;
+    z-index: 1000;
+    overflow: hidden; /* Ensures child elements conform to border-radius */
+    border: 1px solid #eee;
+}
+
+.user-dropdown.show {
+    display: block; /* This class will be toggled by JavaScript to show the menu */
+}
+
+/* Styling for items inside the dropdown */
+.user-dropdown-item,
+.user-dropdown-header {
+    padding: 12px 18px;
+    display: block;
+    text-decoration: none;
+    font-size: 1rem;
+    color: #333;
+    white-space: nowrap; /* Prevents text wrapping */
+}
+
+.user-dropdown-header {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #555;
+    border-bottom: 1px solid #eee;
+    pointer-events: none; /* Makes the header non-clickable */
+}
+
+.user-dropdown-item {
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.user-dropdown-item:hover {
+    background-color: #f1f1f1;
 }

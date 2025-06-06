@@ -1,65 +1,14 @@
 /* client/css/auth-style.css */
-body {
-    font-family: sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f8f9fa; /* Consistent light background */
-    color: #333;
-}
-
-header {
-    background-color: #a5d6a7; /* Green header like shelters.html */
-    width: 100%;
-    height: 75px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    flex-shrink: 0;
-    margin-bottom: 30px; /* Space below header */
-}
-
-nav ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-nav li {
-    margin: 0 15px;
-    font-size: 1.1em; /* Slightly adjusted font size */
-}
-
-nav a {
-    text-decoration: none;
-    color: white; /* White links on green header */
-    padding: 8px 15px;
-    border-radius: 5px;
-    font-weight: 500;
-    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-}
-
-nav a:hover,
-nav a.active {
-    background-color: #81c784; /* Lighter green for hover/active */
-    color: white;
-}
+/* Header, Nav, and Footer styles have been removed to be inherited from style.css */
 
 .auth-container {
     background-color: #ffffff;
-    padding: 30px 40px; /* More padding */
+    padding: 30px 40px;
     width: 100%;
-    max-width: 450px; /* Max width for auth forms */
-    margin: 20px auto; /* Centered */
+    max-width: 450px;
+    margin: 20px auto;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Softer, more modern shadow */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .auth-container h2 {
@@ -82,12 +31,12 @@ nav a.active {
 
 .form-group input[type="email"],
 .form-group input[type="password"],
-.form-group input[type="text"] { /* Added for registration name field */
-    width: 100%; /* Full width */
+.form-group input[type="text"] {
+    width: 100%;
     padding: 12px 15px;
-    border: 1px solid #ced4da; /* Standard border */
+    border: 1px solid #ced4da;
     border-radius: 5px;
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    box-sizing: border-box;
     font-size: 1rem;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -95,13 +44,13 @@ nav a.active {
 .form-group input[type="email"]:focus,
 .form-group input[type="password"]:focus,
 .form-group input[type="text"]:focus {
-    border-color: #a5d6a7; /* Green focus border */
-    box-shadow: 0 0 0 0.2rem rgba(165, 214, 167, 0.35); /* Lighter green shadow */
+    border-color: #a5d6a7;
+    box-shadow: 0 0 0 0.2rem rgba(165, 214, 167, 0.35);
     outline: none;
 }
 
 .auth-button {
-    background-color: #28a745; /* Consistent green submit button */
+    background-color: #28a745;
     color: white;
     padding: 12px 20px;
     border: none;
@@ -112,11 +61,11 @@ nav a.active {
     font-size: 1.1em;
     font-weight: bold;
     transition: background-color 0.3s ease;
-    margin-top: 10px; /* Space above button */
+    margin-top: 10px;
 }
 
 .auth-button:hover {
-    background-color: #218838; /* Darker green on hover */
+    background-color: #218838;
 }
 
 .form-link {
@@ -126,7 +75,7 @@ nav a.active {
 }
 
 .form-link a {
-    color: #007bff; /* Standard link blue */
+    color: #007bff;
     text-decoration: none;
 }
 
@@ -134,7 +83,7 @@ nav a.active {
     text-decoration: underline;
 }
 
-#authMessage { /* For displaying success/error messages */
+#authMessage {
     margin-top: 15px;
     padding: 10px;
     border-radius: 5px;
@@ -155,23 +104,10 @@ nav a.active {
     border: 1px solid #f5c6cb;
 }
 
-footer {
-    background-color: #a5d6a7; /* Consistent footer */
-    color: white;
-    text-align: center;
-    padding: 15px;
-    width: 100%;
-    margin-top: auto; /* Push footer to bottom */
-    font-size: 0.9rem;
-}
-footer p {
-    margin: 5px 0;
-}
-
 /* Responsive adjustments */
 @media (max-width: 480px) {
     .auth-container {
-        margin: 20px 15px; /* Less horizontal margin on small screens */
+        margin: 20px 15px;
         padding: 25px;
     }
     .auth-container h2 {

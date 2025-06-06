@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homeless Shelter Finder - Dashboard</title>
-    <link rel="stylesheet" href="/css/style.css"> 
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/search.css">
     <link rel="icon" type="image/x-icon" href="/images/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 </head>
 <body>
     <header>
@@ -19,12 +21,9 @@
     </header>
 
     <div class="dashboard-content-wrapper">
-        
         <aside class="left-panel-map-about">
             <div class="map-container">
-                <div id="map" class="map">
-                    Loading map...
-                </div>
+                <div id="map" class="map">Loading map...</div>
             </div>
             <div class="about-us">
                 <h2>ABOUT US</h2>
@@ -34,7 +33,12 @@
         </aside>
 
         <main class="right-panel-iframe">
-            <iframe src="/search.html" title="Shelter Search Results">Your browser does not support iframes. Please <a href="/search.html">visit the search page directly</a>.</iframe>
+            <div class="search-bar">
+                <input type="text" placeholder="Search by name, address, notes..." class="search-input" id="mainSearchInput">
+                <button class="search-button" id="mainSearchButton">Search</button>
+            </div>
+            <div class="results" id="resultsContainer">
+                </div>
         </main>
     </div>
 
@@ -44,11 +48,9 @@
     </footer>
     
     <script src="/js/authUtils.js"></script> 
-    
     <script async
             src="https://maps.googleapis.com/maps/api/js?key=GOOGLE_MAPS_API_KEY&callback=initMap&libraries=marker&v=beta">
     </script>
-    
     <script src="/js/main.js"></script> 
 </body>
 </html>
