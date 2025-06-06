@@ -11,11 +11,11 @@ body {
     font-family: sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f8f9fa; /* Light neutral background */
+    background-color: #f8f9fa;
     color: #333;
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Full viewport height */
+    min-height: 100vh;
 }
 
 header {
@@ -27,6 +27,12 @@ header {
     align-items: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     flex-shrink: 0;
+
+    /* --- MODIFICATION START: Make header sticky --- */
+    position: sticky;
+    top: 0;
+    z-index: 1020; /* Ensures header stays on top of other content */
+    /* --- MODIFICATION END --- */
 }
 
 nav ul {
@@ -53,21 +59,18 @@ nav a {
 }
 
 nav a:hover, nav a.active {
-    background-color: #81c784; /* This is the correct lighter green */
+    background-color: #81c784;
     color: white;
 }
 
-/* Wrapper for the two-column layout */
 .dashboard-content-wrapper {
     display: flex;
     flex-grow: 1; 
     padding: 20px;
     gap: 20px; 
     width: 100%;
-    overflow: hidden; 
 }
 
-/* Left Panel: Map and About Us */
 .left-panel-map-about {
     width: 40%; 
     min-width: 320px; 
@@ -77,7 +80,16 @@ nav a:hover, nav a.active {
     background-color: #ffffff;
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); 
     border-radius: 8px;
-    overflow: hidden; 
+    
+    position: sticky;
+    /* --- MODIFICATION START: Adjust top position to account for sticky header --- */
+    /* 75px (header height) + 20px (desired gap) = 95px */
+    top: 95px;
+    /* --- MODIFICATION END --- */
+    align-self: flex-start;
+    /* --- MODIFICATION START: Adjust max-height for new top position --- */
+    max-height: calc(100vh - 175px); /* 100vh - top offset - bottom padding - approx footer */
+    /* --- MODIFICATION END --- */
 }
 
 .map-container {
@@ -96,7 +108,6 @@ nav a:hover, nav a.active {
 .about-us {
     flex-grow: 1; 
     padding: 20px;
-    overflow-y: auto; 
     background-color: #fdfdfd; 
 }
 
@@ -115,7 +126,6 @@ nav a:hover, nav a.active {
     font-size: 0.9rem;
 }
 
-/* Right Panel: Iframe for search.html */
 .right-panel-iframe {
     flex-grow: 1; 
     background-color: #ffffff; 
@@ -124,14 +134,8 @@ nav a:hover, nav a.active {
     overflow: hidden; 
 }
 
-.right-panel-iframe iframe {
-    width: 100%;
-    height: 100%; 
-    border: none; 
-}
-
 footer {
-    background-color: #a5d6a7; /* Darker green consistent with shelters.css footer */
+    background-color: #a5d6a7;
     color: white;
     text-align: center;
     padding: 15px 25px;
@@ -139,27 +143,27 @@ footer {
     width: 100%;
     flex-shrink: 0; 
 }
+
 footer p {
     margin: 5px 0;
 }
 
-/* InfoWindow styling */
 .infowindow-content { 
-    padding: 8px 10px; /* Slightly more padding */
+    padding: 8px 10px;
     max-width: 300px; 
-    font-size: 0.95em; /* Base font size for info window */
+    font-size: 0.95em;
 }
 .infowindow-content h3 { 
     margin: 0 0 8px 0; 
-    font-size: 1.15em; /* Slightly larger heading */
-    color: #005f73;  /* Darker blue for emphasis */
+    font-size: 1.15em;
+    color: #005f73;
 }
 .infowindow-content p { 
     margin: 4px 0; 
     line-height: 1.5;
 }
 .infowindow-content strong {
-    font-weight: 600; /* Make labels a bit bolder */
+    font-weight: 600;
 }
 .infowindow-content a { 
     color: #007bff; 
@@ -170,90 +174,35 @@ footer p {
     text-decoration: underline; 
 }
 
-/* Responsive adjustments */
-@media (max-width: 992px) { /* Tablet and smaller */
-    .dashboard-content-wrapper {
-        flex-direction: column; 
-        overflow: auto; 
-    }
-    .left-panel-map-about, .right-panel-iframe {
-        width: 100%; 
-        max-width: none; 
-    }
-    .right-panel-iframe {
-        min-height: 500px; /* Adjusted height for iframe when stacked */
-    }
-    .map-container {
-        height: 280px; 
-    }
-    .about-us {
-        max-height: 220px; 
-    }
-}
-
-@media (max-width: 768px) { /* Mobile */
-    header, .search-bar-container {
-        padding-left: 15px;
-        padding-right: 15px;
-    }
-    nav ul {
-        flex-wrap: wrap;
-        justify-content: space-around;
-    }
-    nav li {
-        margin: 5px 10px;
-    }
-    .search-bar-container {
-        flex-direction: column;
-        gap: 10px;
-    }
-    .search-bar-container input[type="text"],
-    .search-bar-container button {
-         width: 100%;
-    }
-     .search-bar-container button.menu-button {
-        align-self: flex-start;
-        width: auto;
-    }
-}
-
-/* --- User Icon Menu Styles --- */
-
 .user-menu-container {
-    position: relative; /* This is crucial for positioning the dropdown */
+    position: relative;
     margin-left: 15px;
 }
-
 .user-icon {
-    font-size: 28px; /* Adjust size as needed */
+    font-size: 28px;
     color: white;
     cursor: pointer;
     transition: color 0.3s ease;
 }
-
 .user-icon:hover {
-    color: #e0e0e0; /* Slightly lighter on hover */
+    color: #e0e0e0;
 }
-
 .user-dropdown {
-    display: none; /* Hidden by default */
+    display: none;
     position: absolute;
-    top: 45px; /* Position below the icon */
+    top: 45px;
     right: 0;
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.15);
     min-width: 180px;
     z-index: 1000;
-    overflow: hidden; /* Ensures child elements conform to border-radius */
+    overflow: hidden;
     border: 1px solid #eee;
 }
-
 .user-dropdown.show {
-    display: block; /* This class will be toggled by JavaScript to show the menu */
+    display: block;
 }
-
-/* Styling for items inside the dropdown */
 .user-dropdown-item,
 .user-dropdown-header {
     padding: 12px 18px;
@@ -261,22 +210,38 @@ footer p {
     text-decoration: none;
     font-size: 1rem;
     color: #333;
-    white-space: nowrap; /* Prevents text wrapping */
+    white-space: nowrap;
 }
-
 .user-dropdown-header {
     background-color: #f8f9fa;
     font-weight: bold;
     color: #555;
     border-bottom: 1px solid #eee;
-    pointer-events: none; /* Makes the header non-clickable */
+    pointer-events: none;
 }
-
 .user-dropdown-item {
     cursor: pointer;
     transition: background-color 0.2s ease-in-out;
 }
-
 .user-dropdown-item:hover {
     background-color: #f1f1f1;
+}
+
+@media (max-width: 992px) {
+    .dashboard-content-wrapper {
+        flex-direction: column; 
+    }
+    .left-panel-map-about {
+        position: static; 
+        max-height: none;
+        width: 100%; 
+        max-width: none; 
+    }
+    .right-panel-iframe {
+        min-height: 500px;
+        width: 100%;
+    }
+    .map-container {
+        height: 280px; 
+    }
 }
