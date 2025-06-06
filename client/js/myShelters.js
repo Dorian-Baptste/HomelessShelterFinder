@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (shelters.length === 0) {
       bookmarksListContainer.innerHTML =
-        "<p>You have not bookmarked any shelters yet. You can bookmark shelters from the search page.</p>";
+        "<p>You have not bookmarked any shelters yet. You can bookmark shelters from the home page.</p>";
       return;
     }
 
