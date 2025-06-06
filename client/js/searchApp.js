@@ -1,11 +1,35 @@
 // client/js/searchApp.js
-// Handles logic for the search.html page
 
-document.addEventListener("DOMContentLoaded", () => {
+// This set will hold the IDs of shelters the user has bookmarked.
+let userBookmarks = new Set();
+
+// This new function checks which shelters the logged-in user has already bookmarked.
+async function fetchUserBookmarks() {
+  // The isLoggedIn and getToken functions come from your authUtils.js file.
+  if (!isLoggedIn()) return;
+
+  try {
+    const token = getToken();
+    const response = await fetch("/api/users/bookmarks", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (response.ok) {
+      const bookmarks = await response.json();
+      // Store the IDs in our set for quick checking.
+      userBookmarks = new Set(bookmarks.map((b) => b._id));
+    }
+  } catch (error) {
+    console.error("Could not fetch user bookmarks:", error);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  // Call the function to get bookmarks when the page loads
+  await fetchUserBookmarks();
+
   const searchInput = document.getElementById("searchInput");
   const performSearchButton = document.getElementById("performSearchButton");
   const resultsContainer = document.getElementById("resultsContainer");
-  const paginationContainer = document.getElementById("paginationContainer"); 
 
   // Function to fetch and display search results
   async function performSearch(query = "") {
@@ -13,14 +37,10 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Results container not found");
       return;
     }
-    resultsContainer.innerHTML = "<p>Loading results...</p>"; // Loading indicator
+    resultsContainer.innerHTML = "<p>Loading results...</p>";
 
     try {
-      // Example: ?q=searchTerm&services=food,medical
-      // You'll need to build the query string based on available filters on your search page
       const apiUrl = `/api/shelters?search=${encodeURIComponent(query)}`;
-      // Add more query parameters for filters (services, location, etc.) if you have them
-
       const response = await fetch(apiUrl);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -37,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Function to display results in the HTML
   function displayResults(shelters) {
     if (!resultsContainer) return;
-    resultsContainer.innerHTML = ""; // Clear previous results or loading message
+    resultsContainer.innerHTML = "";
 
     if (shelters.length === 0) {
       resultsContainer.innerHTML =
@@ -45,13 +65,12 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    const loggedIn = isLoggedIn();
+
     shelters.forEach((shelter) => {
       const shelterDiv = document.createElement("div");
       shelterDiv.classList.add("result-item");
 
-      // Sanitize content before inserting if it comes directly from user input elsewhere,
-      // but here it's from our DB, so it should be relatively safe.
-      // However, for descriptions or notes, always be cautious.
       let servicesList =
         shelter.services && shelter.services.length > 0
           ? shelter.services.join(", ")
@@ -60,6 +79,18 @@ document.addEventListener("DOMContentLoaded", () => {
         shelter.contactInfo && shelter.contactInfo.phone
           ? shelter.contactInfo.phone
           : "N/A";
+
+      let bookmarkButtonHTML = "";
+      if (loggedIn) {
+        const isBookmarked = userBookmarks.has(shelter._id);
+        bookmarkButtonHTML = `
+              <button class="bookmark-btn ${
+                isBookmarked ? "bookmarked" : ""
+              }" data-shelter-id="${shelter._id}">
+                  ${isBookmarked ? "★ Bookmarked" : "☆ Bookmark"}
+              </button>
+          `;
+      }
 
       shelterDiv.innerHTML = `
         <h3 class="result-title"><a href="#">${shelter.name}</a></h3>
@@ -79,28 +110,19 @@ document.addEventListener("DOMContentLoaded", () => {
             ? `<p class="result-description"><strong>Notes:</strong> ${shelter.notes}</p>`
             : ""
         }
-        `;
-      // Example: Add event listener to title to show more details or highlight on map
-      // shelterDiv.querySelector('.result-title a').addEventListener('click', (e) => {
-      //   e.preventDefault();
-      //   alert(`Displaying details for ${shelter.name}`);
-      //   // Potentially, you could have a modal or redirect to a detailed view
-      // });
+        ${bookmarkButtonHTML} 
+      `;
 
       resultsContainer.appendChild(shelterDiv);
     });
-
-    // Basic pagination (to be implemented more robustly)
-    // displayPagination(shelters.length /*, itemsPerPage, currentPage */);
   }
 
-  // --- Event Listeners ---
+  // Event Listeners for search
   if (performSearchButton && searchInput) {
     performSearchButton.addEventListener("click", () => {
       const query = searchInput.value.trim();
       performSearch(query);
     });
-
     searchInput.addEventListener("keypress", (event) => {
       if (event.key === "Enter") {
         performSearchButton.click();
@@ -110,39 +132,45 @@ document.addEventListener("DOMContentLoaded", () => {
     console.warn("Search input or button not found on search.html");
   }
 
-  // --- Initial Load ---
-  // Check for query parameters on page load (e.g., from homepage search)
-  const urlParams = new URLSearchParams(window.location.search);
-  const initialQuery = urlParams.get("q"); // For general search term
-  const shelterId = urlParams.get("id"); // For specific shelter ID
+  // Event listener for bookmark buttons
+  resultsContainer.addEventListener("click", async (event) => {
+    if (event.target.classList.contains("bookmark-btn")) {
+      const button = event.target;
+      const shelterId = button.dataset.shelterId;
+      const token = getToken();
 
-  if (shelterId) {
-    // Fetch and display a single shelter's details
-    async function fetchSingleShelter(id) {
-      resultsContainer.innerHTML = "<p>Loading shelter details...</p>";
+      if (!token) return;
+
+      const isBookmarked = button.classList.contains("bookmarked");
+      const method = isBookmarked ? "DELETE" : "POST";
+      const url = `/api/users/bookmarks/${shelterId}`;
+
       try {
-        const response = await fetch(`/api/shelters/${id}`);
-        if (!response.ok)
-          throw new Error(`HTTP error! status: ${response.status}`);
-        const shelter = await response.json();
-        if (shelter) {
-          displayResults([shelter]); // displayResults expects an array
+        const response = await fetch(url, {
+          method,
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.ok) {
+          button.classList.toggle("bookmarked");
+          if (isBookmarked) {
+            button.innerHTML = "☆ Bookmark";
+            userBookmarks.delete(shelterId);
+          } else {
+            button.innerHTML = "★ Bookmarked";
+            userBookmarks.add(shelterId);
+          }
         } else {
-          resultsContainer.innerHTML = "<p>Shelter not found.</p>";
+          const error = await response.json();
+          alert(`Error: ${error.message}`);
         }
-      } catch (error) {
-        console.error("Error fetching single shelter:", error);
-        resultsContainer.innerHTML =
-          '<p style="color: red;">Error loading shelter details.</p>';
+      } catch (err) {
+        console.error("Bookmark toggle failed:", err);
+        alert("An error occurred. Please try again.");
       }
     }
-    fetchSingleShelter(shelterId);
-    if (searchInput) searchInput.value = ""; // Clear search bar if viewing specific shelter
-  } else if (initialQuery) {
-    if (searchInput) searchInput.value = initialQuery;
-    performSearch(initialQuery);
-  } else {
-    // Perform a default search or show all shelters if no query
-    performSearch(""); // Fetches all shelters by default if backend handles empty search this way
-  }
+  });
+
+  // Initial Load Logic
+  performSearch(""); // This will fetch and display all shelters on initial load
 });

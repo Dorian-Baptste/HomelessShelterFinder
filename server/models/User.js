@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, "Please add an email"],
-    unique: true, // Ensures emails are unique
+    unique: true,
     match: [
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
       "Please add a valid email",
@@ -23,8 +23,15 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please add a password"],
     minlength: [6, "Password must be at least 6 characters long"],
-    select: false, // Do not return password by default when querying users
+    select: false,
   },
+  // ADD THIS NEW FIELD
+  bookmarkedShelters: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Shelter", // This creates a reference to the Shelter model
+    },
+  ],
   dateRegistered: {
     type: Date,
     default: Date.now,
@@ -33,14 +40,12 @@ const UserSchema = new mongoose.Schema({
 
 // Middleware to hash password before saving a new user
 UserSchema.pre("save", async function (next) {
-  // Only hash the password if it has been modified (or is new)
   if (!this.isModified("password")) {
     return next();
   }
-
   try {
-    const salt = await bcrypt.genSalt(10); // Generate a salt
-    this.password = await bcrypt.hash(this.password, salt); // Hash the password
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
     next();
   } catch (error) {
     next(error);
