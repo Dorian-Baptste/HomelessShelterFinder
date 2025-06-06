@@ -61,18 +61,18 @@ router.post("/register", async (req, res) => {
 router.post("/bookmarks/:shelterId", protect, async (req, res) => {
   try {
     const shelterId = req.params.shelterId;
-
-    // Verify shelter exists
     const shelter = await Shelter.findById(shelterId);
     if (!shelter) {
       return res.status(404).json({ message: "Shelter not found" });
     }
 
-    // Add shelter to user's bookmarks using $addToSet to prevent duplicates
     await User.updateOne(
       { _id: req.user.id },
       { $addToSet: { bookmarkedShelters: shelterId } }
     );
+
+    // --- NEW: Emit event to all connected clients ---
+    req.io.emit("shelter_bookmarked", { shelterName: shelter.name });
 
     res.status(200).json({ message: "Shelter bookmarked successfully" });
   } catch (error) {

@@ -61,9 +61,10 @@ body {
     background-color: #fff; /* White background for items */
     margin-bottom: 20px;
     padding: 15px; /* More padding */
-    border-radius: 8px; /* Rounded corners */
+    border-radius: 20px; /* Rounded corners */
     box-shadow: 0 1px 3px rgba(0,0,0,0.08); /* Subtle shadow */
     transition: box-shadow 0.3s ease;
+    border-color: #81c784;
 }
 
 .result-item:hover {
