@@ -52,14 +52,17 @@ async function initMap() {
         map.setCenter(userLocation);
         map.setZoom(13);
 
-        // --- FIX #2 START ---
-        // Pass the 'userLocation' object, not the browser's 'position' object.
-        new AdvancedMarkerElement({
+        const userMarker = new AdvancedMarkerElement({
           map,
           position: userLocation,
           title: "Your Location",
         });
-        // --- FIX #2 END ---
+
+        // --- NEW: Add click listener for the user's location marker ---
+        userMarker.addListener("click", () => {
+          infoWindow.setContent("<h3>Current Location</h3>");
+          infoWindow.open(map, userMarker);
+        });
       },
       () => console.warn("Geolocation failed. Defaulting to NYC.")
     );
@@ -91,7 +94,6 @@ async function fetchAndDisplayAllShelters() {
 
 // Displays a list of shelters in the right-hand panel
 function displaySheltersInList(sheltersToDisplay) {
-  // This function is correct and remains unchanged
   resultsContainer.innerHTML = "";
 
   if (sheltersToDisplay.length === 0) {
@@ -156,8 +158,6 @@ async function displaySheltersOnMap(sheltersToDisplay) {
       });
       currentMarkers.push(marker);
 
-      // --- FIX #1 START ---
-      // Re-added the logic to define variables for the info window content.
       const phone = shelter.contactInfo?.phone || "N/A";
       let shelterTypeInfo = "General Services";
       if (shelter.services && shelter.services.length > 0) {
@@ -172,7 +172,6 @@ async function displaySheltersOnMap(sheltersToDisplay) {
           shelterTypeInfo = "Men's Shelter";
         else shelterTypeInfo = shelter.services.slice(0, 2).join(", ");
       }
-      // --- FIX #1 END ---
 
       const contentString = `
         <div class="infowindow-content">
@@ -181,7 +180,7 @@ async function displaySheltersOnMap(sheltersToDisplay) {
           <p><strong>Address:</strong> ${shelter.address || "N/A"}</p>
           <p><strong>Phone:</strong> ${phone}</p>
           <p><a href="${
-            shelter.website || shelter.googleMapsLink
+            shelter.contactInfo?.website || "#"
           }" target="_blank" rel="noopener noreferrer">More Details</a></p>
         </div>
       `;
