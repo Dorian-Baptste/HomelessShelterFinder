@@ -51,7 +51,9 @@ document.addEventListener("DOMContentLoaded", () => {
       shelterDiv.setAttribute("id", `bookmark-${shelter._id}`);
 
       shelterDiv.innerHTML = `
-                <h3 class="result-title"><a>${shelter.name}</a></h3>
+                <h3 class="result-title"><a class="shelter-title" href="${
+                  shelter.website || shelter.googleMapsLink
+                }" target="_blank">${shelter.name}</a></h3>
                 <p class="result-address"><strong>Address:</strong> ${
                   shelter.address || "N/A"
                 }</p>

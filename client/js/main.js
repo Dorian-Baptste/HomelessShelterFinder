@@ -123,7 +123,9 @@ function displaySheltersInList(sheltersToDisplay) {
     }
 
     shelterDiv.innerHTML = `
-            <h3 class="result-title">${shelter.name}</h3>
+            <h3 class="result-title"><a class="shelter-title" href="${
+              shelter.website || shelter.googleMapsLink
+            }" target="_blank" rel="noopener noreferrer">${shelter.name}</a></h3>
             <p><strong>Address:</strong> ${shelter.address || "N/A"}</p>
             <p><strong>Phone:</strong> ${phone}</p>
             <p><strong>Services:</strong> ${services}</p>
@@ -179,7 +181,7 @@ async function displaySheltersOnMap(sheltersToDisplay) {
           <p><strong>Address:</strong> ${shelter.address || "N/A"}</p>
           <p><strong>Phone:</strong> ${phone}</p>
           <p><a href="${
-            shelter.contactInfo?.website || "#"
+            shelter.website || shelter.googleMapsLink
           }" target="_blank" rel="noopener noreferrer">More Details</a></p>
         </div>
       `;

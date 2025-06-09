@@ -39,8 +39,20 @@
 
 .result-item h3 {
     font-size: 1.3em;
-    color: #1a0dab;
+    color: #81c784;
+    text-decoration: none;
     margin: 0 0 10px 0;
+}
+
+.shelter-title {
+    color: #81c784;
+    text-decoration: none;
+}
+
+.shelter-title:hover {
+    text-decoration: underline;
+    color: #578259;
+    transition: 0.2s;
 }
 
 .result-item p {
