@@ -18,14 +18,16 @@ const resultsContainer = document.getElementById("resultsContainer");
 // INITIALIZATION
 // =================================================================
 
-// THIS IS THE CRITICAL FIX: The function must be attached to the 'window' object.
 window.initMap = async function () {
   // --- Map Initialization ---
   const mapElement = document.getElementById("map");
   mapElement.innerHTML = ""; // Clear "Loading map..." text
 
   const { Map } = await google.maps.importLibrary("maps");
-  const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+  // MODIFICATION: Import PinElement to allow for custom marker styling
+  const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary(
+    "marker"
+  );
 
   map = new Map(mapElement, {
     center: NYC_COORDS,
@@ -52,9 +54,18 @@ window.initMap = async function () {
         map.setCenter(userLocation);
         map.setZoom(13);
 
+        // MODIFICATION: Create a custom blue pin for the user's location
+        const userPin = new PinElement({
+          background: "#007BFF", // A distinct blue color
+          borderColor: "#0056b3", // A darker blue for the border
+          glyphColor: "#FFFFFF", // A white glyph (the dot inside)
+        });
+
+        // MODIFICATION: Use the custom pin's element as the marker's content
         const userMarker = new AdvancedMarkerElement({
           map,
           position: userLocation,
+          content: userPin.element,
           title: "Your Location",
         });
 
@@ -125,7 +136,9 @@ function displaySheltersInList(sheltersToDisplay) {
     shelterDiv.innerHTML = `
             <h3 class="result-title"><a class="shelter-title" href="${
               shelter.website || shelter.googleMapsLink
-            }" target="_blank" rel="noopener noreferrer">${shelter.name}</a></h3>
+            }" target="_blank" rel="noopener noreferrer">${
+      shelter.name
+    }</a></h3>
             <p><strong>Address:</strong> ${shelter.address || "N/A"}</p>
             <p><strong>Phone:</strong> ${phone}</p>
             <p><strong>Services:</strong> ${services}</p>
