@@ -6,29 +6,53 @@
     <title>All Users - Homeless Shelter Finder</title>
     
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/search.css"> <link rel="icon" type="image/x-icon" href="/images/logo.png">
+    <link rel="stylesheet" href="/css/search.css"> 
+    
+    <link rel="icon" type="image/x-icon" href="/images/logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Merriweather&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-        <h2 class="title">Homeless Shelter Finder</h2>
+        <div class="header-left">
+            <img src="/images/logo.png" alt="Shelter Finder Logo" class="header-logo">
+            <h2 class="title">Homeless Shelter Finder</h2>
+        </div>
         <nav>
             <ul>
                 <li><a href="/index.html">HOME</a></li>
                 <li><a href="/shelters.html">MY SHELTERS</a></li>
-                </ul>
+            </ul>
         </nav>
     </header>
 
-    <main class="bookmarks-container"> <h2>All Registered Users</h2>
-        <div id="users-list-container" class="results">
-            </div>
+    <main class="bookmarks-container">
+        <h2>All Registered Users</h2>
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody id="users-list-body">
+                </tbody>
+        </table>
     </main>
 
     <footer>
-        <p>&copy; 2025 Homeless Shelter Finder. All rights reserved.</p>
+        <img src="/images/logo.png" alt="Shelter Finder Logo" class="footer-logo">
+        <p>© 2025 Homeless Shelter Finder. All rights reserved.</p>
+        <div class="footer-links" style="margin-top: 10px;">
+            <a href="https://www.coalitionforthehomeless.org/" target="_blank" style="color: white; margin: 0 10px;">Coalition for the Homeless</a> |
+            <a href="https://www.nyc.gov/site/dhs/index.page" target="_blank" style="color: white; margin: 0 10px;">NYC Dept. of Homeless Services</a> |
+            <a href="https://www.bowery.org/" target="_blank" style="color: white; margin: 0 10px;">The Bowery Mission</a>
+        </div>
     </footer>
 
     <script src="/js/authUtils.js"></script>
-    <script src="/js/users.js"></script> </body>
+    <script src="/js/users.js"></script>
+</body>
 </html>

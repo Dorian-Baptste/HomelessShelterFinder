@@ -18,8 +18,8 @@ const resultsContainer = document.getElementById("resultsContainer");
 // INITIALIZATION
 // =================================================================
 
-// Function to initialize the Google Map (called by Google Maps API script)
-async function initMap() {
+// THIS IS THE CRITICAL FIX: The function must be attached to the 'window' object.
+window.initMap = async function () {
   // --- Map Initialization ---
   const mapElement = document.getElementById("map");
   mapElement.innerHTML = ""; // Clear "Loading map..." text
@@ -58,7 +58,6 @@ async function initMap() {
           title: "Your Location",
         });
 
-        // --- NEW: Add click listener for the user's location marker ---
         userMarker.addListener("click", () => {
           infoWindow.setContent("<h3>Current Location</h3>");
           infoWindow.open(map, userMarker);
@@ -67,7 +66,7 @@ async function initMap() {
       () => console.warn("Geolocation failed. Defaulting to NYC.")
     );
   }
-}
+};
 
 // =================================================================
 // DATA FETCHING & DISPLAY
@@ -81,7 +80,7 @@ async function fetchAndDisplayAllShelters() {
     if (!response.ok) throw new Error(`API error! Status: ${response.status}`);
 
     const shelters = await response.json();
-    allShelters = shelters; // Store in our global variable
+    allShelters = shelters;
 
     displaySheltersOnMap(allShelters);
     displaySheltersInList(allShelters);
@@ -243,6 +242,22 @@ if (mainSearchButton && mainSearchInput) {
   });
 }
 
+const sortDropdown = document.getElementById("sort-shelters");
+if (sortDropdown) {
+  sortDropdown.addEventListener("change", (event) => {
+    const sortBy = event.target.value;
+    let sortedShelters = [...allShelters];
+
+    if (sortBy === "name-asc") {
+      sortedShelters.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortBy === "name-desc") {
+      sortedShelters.sort((a, b) => b.name.localeCompare(a.name));
+    }
+
+    displaySheltersInList(sortedShelters);
+  });
+}
+
 resultsContainer.addEventListener("click", async (event) => {
   if (event.target.classList.contains("bookmark-btn")) {
     const button = event.target;
@@ -282,4 +297,34 @@ resultsContainer.addEventListener("click", async (event) => {
 function clearMarkers() {
   currentMarkers.forEach((marker) => (marker.map = null));
   currentMarkers = [];
+}
+
+// =================================================================
+// SOCKET.IO REAL-TIME LOGIC
+// =================================================================
+
+const socket = io();
+
+socket.on("shelter_bookmarked", (data) => {
+  if (data && data.shelterName) {
+    showNotification(`A user just bookmarked: ${data.shelterName}`);
+  }
+});
+
+function showNotification(message) {
+  const toast = document.createElement("div");
+  toast.className = "notification-toast";
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add("show");
+  }, 100);
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => {
+      document.body.removeChild(toast);
+    }, 500);
+  }, 4000);
 }

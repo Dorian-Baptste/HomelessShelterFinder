@@ -1,31 +1,24 @@
-/* Content from your original search.css */
+/* client/css/search.css */
 body {
     font-family: sans-serif;
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f9f9f9; /* Light background for the page */
+    background-color: #f9f9f9;
 }
 
 .search-bar {
-    background-color: #fff; /* White background for search bar */
+    background-color: #fff;
     padding: 20px;
     display: flex;
     justify-content: center;
-    width: 80%; /* Adjusted width */
-    max-width: 700px; /* Max width for larger screens */
-    margin: 30px auto; /* Centered with margin */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .search-input {
     width: 80%;
-    padding: 12px 15px; /* More padding */
-    border: 1px solid #ddd; /* Softer border */
+    padding: 12px 15px;
+    border: 1px solid #ddd;
     border-radius: 5px 0 0 5px;
     outline: none;
     font-size: 16px;
@@ -33,13 +26,13 @@ body {
 }
 
 .search-input:focus {
-    border-color: #007bff; /* Highlight on focus */
+    border-color: #007bff;
 }
 
 .search-button {
-    background-color: #a5d6a7; /* Darker green */
+    background-color: #a5d6a7;
     color: white;
-    padding: 12px 20px; /* More padding */
+    padding: 12px 20px;
     border: none;
     border-radius: 0 5px 5px 0;
     cursor: pointer;
@@ -48,92 +41,49 @@ body {
 }
 
 .search-button:hover {
-    background-color: #81c784; /* Lighter green on hover */
+    background-color: #81c784;
 }
 
 .results {
-    width: 80%; /* Adjusted width */
-    max-width: 700px; /* Max width for larger screens */
-    margin: 20px auto; /* Centered with margin */
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .result-item {
-    background-color: #fff; /* White background for items */
+    background-color: #fff;
     margin-bottom: 20px;
-    padding: 15px; /* More padding */
-    border-radius: 20px; /* Rounded corners */
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08); /* Subtle shadow */
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     transition: box-shadow 0.3s ease;
-    border-color: #81c784;
 }
 
 .result-item:hover {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* More pronounced shadow on hover */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .result-title {
-    font-size: 1.3em; /* Larger title */
+    font-size: 1.3em;
     color: #1a0dab;
     text-decoration: none;
-    font-weight: 600; /* Bolder */
+    font-weight: 600;
 }
 
 .result-title:hover {
     text-decoration: underline;
 }
 
-.result-url {
-    font-size: 0.9em;
-    color: #006621;
-    margin-top: 5px; /* Spacing */
-    display: block; /* Ensure it takes its own line if needed */
-}
-
-.result-description {
-    font-size: 1em; /* Slightly larger description */
+.result-item p {
+    font-size: 1em;
     color: #545454;
-    line-height: 1.6; /* Improved readability */
-    margin-top: 8px; /* Spacing */
-}
-
-.pagination {
-    margin-top: 30px;
-    text-align: center;
-    width: 80%; /* Adjusted width */
-    max-width: 700px; /* Max width */
-    margin: 30px auto 40px auto; /* Centered with margin, more bottom margin */
-}
-
-.page-number {
-    padding: 10px 15px; /* More padding */
-    border: 1px solid #ddd;
-    margin: 0 5px;
-    text-decoration: none;
-    color: #333;
-    border-radius: 5px; /* Rounded corners */
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.page-number:hover, .page-number.active {
-    background-color: #a5d6a7; /* Green background for active/hover */
-    color: white;
-    border-color: #a5d6a7;
-}
-
-footer {
-    background-color: #a5d6a7; /* Darker green */
-    color: white;
-    text-align: center;
-    padding: 15px; /* More padding */
-    width: 100%;
-    margin-top: auto; /* Push footer to bottom */
-    box-shadow: 0 -2px 4px rgba(0,0,0,0.1); /* Subtle top shadow */
+    line-height: 1.6;
+    margin: 5px 0;
 }
 
 /* --- Bookmark Button Styles --- */
-
 .bookmark-btn {
-    background-color: #a5d6a7;
+    background-color: #f0f0f0;
     color: #333;
     border: 1px solid #ddd;
     padding: 8px 12px;
@@ -150,10 +100,9 @@ footer {
     border-color: #ccc;
 }
 
-/* Style for when a shelter IS bookmarked */
 .bookmark-btn.bookmarked {
-    background-color: #ffc107; /* A gold/yellow color for 'starred' */
-    color: #212529; /* Dark text for contrast */
+    background-color: #ffc107;
+    color: #212529;
     border-color: #f5b300;
     font-weight: 600;
 }
@@ -161,4 +110,48 @@ footer {
 .bookmark-btn.bookmarked:hover {
     background-color: #e0a800;
     border-color: #d39e00;
+}
+
+/* --- Sort Dropdown Styles --- */
+#sort-shelters {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#sort-shelters:focus {
+    border-color: #a5d6a7;
+    box-shadow: 0 0 0 0.2rem rgba(165, 214, 167, 0.35);
+    outline: none;
+}
+
+/* --- User Table Styles --- */
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border-radius: 8px;
+    overflow: hidden;
+}
+.user-table th, .user-table td {
+    border-bottom: 1px solid #ddd;
+    padding: 12px 15px;
+    text-align: left;
+}
+.user-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+.user-table tr:last-child td {
+    border-bottom: none;
+}
+.user-table tr:hover {
+    background-color: #f2f2f2;
 }

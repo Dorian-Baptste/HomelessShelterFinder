@@ -1,21 +1,39 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const usersListContainer = document.getElementById("users-list-container");
+  // This now correctly targets the <tbody> element from your HTML
+  const tableBody = document.getElementById("users-list-body");
 
-  // Check if user is logged in before trying to fetch data
+  // If the user isn't logged in, display a message and stop.
   if (!isLoggedIn()) {
-    usersListContainer.innerHTML = `
-            <p style="text-align: center; font-size: 1.1em;">
-                You must be <a href="/login.html">logged in</a> to view this page.
-            </p>
-        `;
+    const mainContent = document.querySelector(".bookmarks-container");
+    if (mainContent) {
+      mainContent.innerHTML = `
+                <p style="text-align: center; font-size: 1.1em;">
+                    You must be <a href="/login.html">logged in</a> to view this page.
+                </p>
+            `;
+    }
     return;
   }
 
+  // Proceed to load the users if logged in
   loadAllUsers();
 
   async function loadAllUsers() {
-    usersListContainer.innerHTML = "<p>Loading users...</p>";
-    const token = getToken(); // Get token from authUtils.js
+    // Check if the table body element exists before trying to use it
+    if (!tableBody) {
+      console.error("The element with ID 'users-list-body' was not found.");
+      return;
+    }
+
+    // Display a loading message inside the table
+    tableBody.innerHTML = ""; // Clear any previous content
+    const loadingRow = tableBody.insertRow();
+    const loadingCell = loadingRow.insertCell();
+    loadingCell.colSpan = 2;
+    loadingCell.textContent = "Loading users...";
+    loadingCell.style.textAlign = "center";
+
+    const token = getToken();
 
     try {
       const response = await fetch("/api/users/all", {
@@ -31,28 +49,38 @@ document.addEventListener("DOMContentLoaded", () => {
       const users = await response.json();
       displayUsers(users);
     } catch (error) {
-      usersListContainer.innerHTML = `<p class="error">${error.message}</p>`;
+      // Display error message in the table
+      tableBody.innerHTML = "";
+      const errorRow = tableBody.insertRow();
+      const errorCell = errorRow.insertCell();
+      errorCell.colSpan = 2;
+      errorCell.textContent = error.message;
+      errorCell.style.textAlign = "center";
+      errorCell.style.color = "red";
     }
   }
 
   function displayUsers(users) {
-    usersListContainer.innerHTML = "";
+    if (!tableBody) return;
+    tableBody.innerHTML = ""; // Clear loading message
 
     if (users.length === 0) {
-      usersListContainer.innerHTML = "<p>No users found.</p>";
+      const emptyRow = tableBody.insertRow();
+      const emptyCell = emptyRow.insertCell();
+      emptyCell.colSpan = 2;
+      emptyCell.textContent = "No users found.";
+      emptyCell.style.textAlign = "center";
       return;
     }
 
     users.forEach((user) => {
-      const userDiv = document.createElement("div");
-      // Reuse the .result-item style from search.css for consistency
-      userDiv.classList.add("result-item");
+      const row = tableBody.insertRow();
 
-      userDiv.innerHTML = `
-                <h3 class="result-title" style="margin-bottom: 5px;">${user.name}</h3>
-                <p><strong>Email:</strong> ${user.email}</p>
-            `;
-      usersListContainer.appendChild(userDiv);
+      const nameCell = row.insertCell();
+      nameCell.textContent = user.name;
+
+      const emailCell = row.insertCell();
+      emailCell.textContent = user.email;
     });
   }
 });
