@@ -43,18 +43,24 @@ function createUserIconMenu(navUl, userName) {
   menuContainer.className = "user-menu-container";
 
   const icon = document.createElement("i");
-  icon.className = "fas fa-user-circle user-icon"; // Font Awesome icon
+  icon.className = "fas fa-user-circle user-icon";
 
   const dropdown = document.createElement("div");
   dropdown.className = "user-dropdown";
 
-  // Populate dropdown based on login state
   if (userName) {
     // --- LOGGED-IN STATE ---
+
+    // --- NEW: Add USERS link for logged-in users ---
+    const usersLi = document.createElement("li");
+    usersLi.innerHTML = '<a href="/users.html">USERS</a>';
+    navUl.appendChild(usersLi);
+
     const header = document.createElement("div");
     header.className = "user-dropdown-header";
     header.textContent = `Logged in as:`;
-
+    // ... (rest of the LOGGED-IN dropdown creation code is unchanged)
+    // ...
     const nameDisplay = document.createElement("div");
     nameDisplay.className = "user-dropdown-header";
     nameDisplay.style.fontWeight = "normal";
@@ -64,7 +70,7 @@ function createUserIconMenu(navUl, userName) {
     const logoutItem = document.createElement("a");
     logoutItem.className = "user-dropdown-item";
     logoutItem.textContent = "Logout";
-    logoutItem.onclick = logout; // Call logout function on click
+    logoutItem.onclick = logout;
 
     dropdown.appendChild(header);
     dropdown.appendChild(nameDisplay);
@@ -78,7 +84,6 @@ function createUserIconMenu(navUl, userName) {
 
     dropdown.appendChild(loginItem);
 
-    // Add the "Register" link to the main nav
     const registerLi = document.createElement("li");
     registerLi.innerHTML = '<a href="/register.html">REGISTER</a>';
     navUl.appendChild(registerLi);
@@ -88,9 +93,8 @@ function createUserIconMenu(navUl, userName) {
   menuContainer.appendChild(dropdown);
   navUl.appendChild(menuContainer);
 
-  // Event listener to toggle dropdown visibility
   icon.addEventListener("click", (event) => {
-    event.stopPropagation(); // Prevent window click event from firing immediately
+    event.stopPropagation();
     dropdown.classList.toggle("show");
   });
 }
